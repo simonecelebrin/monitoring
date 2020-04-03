@@ -47,5 +47,34 @@ plot(country, cases, las=2, cex.axis=0.5) #per cambiare dimensione scritte
 #vediamo ggplot ha 3 componenti: dati, estetica della mappa, funzione geometrica che vuoi usare per graficizzare dati
 #intal ggplot2 package
 install.packets("ggplot2")
+#per caricare uno spazio di lavoro
+load("arealavoro_R_covid.RData")
+#per vedere se ha attuato il comando 
+ls()
+#ls è un comando che fa vedere tutte le elaborazioni che avevamo fatto nel file
+#shows what data sets and functions a user has defined. When invoked with no argument inside a function, ls returns the names of the function's local variables
 
-
+#introduciamo ggplot
+#è il più fancy packages in R to do beautiful graphs
+library(ggplot2)
+#c'è un database chiamato MPG di macchine
+data(mpg)
+head(mpg)
+#3 componenti chiave GGPLOT: data, aes(fz estetiche), geometry 
+ggplot #fz to plot the data
+ggplot(mpg, aes(x=displ, y=hwy)) + geom_point() #geometry is separated 
+ #cambiamo la geometria del grafico usando le linee
+ggplot(mpg, aes(x=displ, y=hwy)) + geom_line()
+ggplot(mpg, aes(x=displ, y=hwy)) + geom_polygon()
+#torniamo al covid
+head(covid) #poi mettiamo fz ggplot con anche specificazione che dimensione punti è uguale al numero di casi
+ggplot(covid,aes(x=lon, y=lat, size=cases)) + geom_point()
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                 
