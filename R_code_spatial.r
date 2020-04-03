@@ -69,7 +69,8 @@ ggplot(mpg, aes(x=displ, y=hwy)) + geom_polygon()
 #torniamo al covid
 head(covid) #poi mettiamo fz ggplot con anche specificazione che dimensione punti è uguale al numero di casi
 ggplot(covid,aes(x=lon, y=lat, size=cases)) + geom_point()
-                 
+
+
                  
                  
                  
