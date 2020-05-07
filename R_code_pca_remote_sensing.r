@@ -52,3 +52,27 @@ p224r63_2011_res <- aggregate(p224r63_2011, fact=10)
 
 ora la funzione PCA la attuiamo con questo comando della libreria RStoolbox
 p224r63_2011_pca <- rasterPCA(p224r63_2011_res)
+p224r63_2011_pca # per vedere le caratteristiche del PCA
+
+#call: è solo l'indicazione della PCA svolta sul file
+#model: stiamo usando la correlazione tra le variabile quindi la matrice di covarianza
+#map: info sulla mappa
+
+#ora la plottiamo
+#ha diversi output: la call, il model e la mappa
+#quindi plottiamo la mappa usando il $
+
+plot(p224r63_2011_pca$map)
+cl<- colorRampPalette(c("dark grey","grey","light grey"))(100)
+plot(p224r63_2011_pca$map, col=cl)
+
+#ci da 7 PC 
+#varie componenti: PC1 ci da tutte le componenti, e via via PC2, PC3 ecc riducono le componenti
+# il componente principale ci da magari il 90% di info e via via di meno gli altri. Il PC7 ha magari solo del rumore inutile
+
+#ora come vedere la variazione di ogni componente in un PC
+summary(p224r63_2011_pca$model) #fa un sommario del modello 
+#così ti spiega tutto riassumento per ogni PC plottato
+#e vediamo che il PC1 rappresenta il 99,83 ecc della variabilità, quindi le bande erano molto correlate. 
+
+#ora vediamo quanto ogni banda era correlata con l'altra con la funzione pairs
