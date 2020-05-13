@@ -29,3 +29,20 @@ pdf("faPAR10.pdf")
 levelplot(faPAR10)
 dev.off()
 
+############# day 2
+
+setwd("C:/lab/")
+ load("faPAR.RData")
+#original faPAR is 2gb
+#let's see how much space is needed for an 8 bits set
+
+library(rasterdiv)
+library(raster)
+#per scrivere un file raster di una libreria nel pc
+writeRaster(copNDVI, "copNDVI.tif")
+#poi guardo sulla cartella lab il peso
+#solo 5.4MB
+
+library(rasterVis)
+#faPAR levelplot this set
+levelplot(faPAR10)
