@@ -1,21 +1,22 @@
+#first R code
+#let'install a package
 install.packages("sp")
-
+#we recall it 
 library(sp)
-data(meuse)
+data(meuse) #it's a dataset in meuse
 
 # let's see how the meuse dataset is structured:
 meuse
-
 #let's look at the first row of the set
 head(meuse)
 
 #lets'plot two variables
-#let's see f zinc concentration is related to that of copper
-attach(meuse)
+#let's see if zinc concentration is related to copper once
+attach(meuse) #attach is necessary to recall single variables in meuse
 plot(zinc,copper)
-#col=green è un colore associato ad un numero, serve per colorare il grafico
+#col=green it's a color associated to a number, it colors the graph
 plot(zinc,copper,col="green")
-#per cambiare i simboli inseriamo la funzione e il numero associato ad un simbolo
+#to change symbols we insert the function and the number associated to the symbol we want
 plot(zinc,copper,col="green",pch=19)
-#aumentare dimensione dei punti
+#to increase point dimension
 plot(zinc,copper,col="green",pch=19,cex=2)
