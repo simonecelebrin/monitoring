@@ -108,8 +108,8 @@ time <- 1:nlayers(snow.multitemp)
 fun <- function(x) {if (is.na(x[1])){ NA } else {lm(x ~ time)$coefficients[2] }} 
 #calcolate on extension the function fun thanks to "calc"
 #Calculate values for a new Raster* object from another Raster* object, using a formula.
-predicted.snow.2025 <- calc(extension, fun) # time consuming: make a pause!
-predicted.snow.2025.norm <- predicted.snow.2025*255/53.90828
+predicted.snow.2025 <- calc(extension, fun) # time consuming
+predicted.snow.2025.norm <- predicted.snow.2025*255/53.90828 #normalize the data
 ################### finish description of prediction file
 
 #so let's do the prediction
