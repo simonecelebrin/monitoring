@@ -56,7 +56,8 @@ plot(snow2020, col=cl)
 #we want to apply the funtion raster to several layers at a time and we do with lapply
 
 #first we make the list of the files we are going to import
-#the function is list.files #and it riunisce tot files that cointains a common pattern into the name
+#the function is list.files 
+#and it riunisce tot files that cointains a common pattern into the name
 rlist<-list.files(pattern="snow") #we can use also snow20
 rlist #to see the output of the function
 #now we apply the function lapply to the list called rlist (composed by the 5 files)
@@ -115,10 +116,47 @@ predicted.snow.2025.norm <- predicted.snow.2025*255/53.90828 #normalize the data
 #so let's do the prediction
 source("prediction.r")
 
+plot(predicted.snow.2025.norm, col=cl)
+
+############### DAY 2
+setwd("C:/lab/snow/")
+
+#Exercise: import the snow cover images all togheter
+rlist<-list.files(pattern="snow20") #find the files
+import<-lapply(rlist,raster)#import them
+snow.multitemp<-stack(import) #we put togheter the files
+snow.multitemp #to see details of stack
+cl <- colorRampPalette(c('darkblue','blue','light blue'))(100)
+plot(snow.multitemp, col=cl)
+#poi importo per salvare empo la previsione fatta dal prof
+#sarebbe uguale a :
+plot(predicted.snow.2025.norm, col=cl)
+#invece facciamo:
+prediction <- raster("predicted.2025.norm.tif")
+plot(prediction, col=cl)
+
+#è una immagine per cui per ogni pixel ha calcolato un valore in base ai valori dei precedenti 
+#quindi per ogni pixel una retta di regressione prevedendo il valore del 2025
+
+#export the predicted output THAT CAN BE USED BY ANOTHER ONE (a raster file)
+writeRaster(prediction, "final.tif") #the given name of the file is final.tif 
 
 
+#now we do a final stack (to put all the images togheter)
+final.stack<-stack(snow.multitemp, prediction) #abbiamo unito con uno stack i 5 laayers uniti già in precedenza, cui aggiungiamo un immagine detta prediction
+#so we obtain a final stack with 6 images
+plot(final.stack, col=cl)
 
+#now we export this stack in pdf for the thesis
+pdf("my_final_graph.pdf")
+plot(final.stack, col=cl)
+dev.off()
+#now we export this stack in png for the thesis
+png("my_final_graph.png")
+plot(final.stack, col=cl)
+dev.off()
 
+#to increase the resolution of a png there are differents methods online
 
 
 
