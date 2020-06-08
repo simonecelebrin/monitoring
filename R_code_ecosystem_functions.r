@@ -1,8 +1,8 @@
-# R cose ecosystem function.r 
+# R code ecosystem function.r 
 
 #R code to view biomass over the word and calculate changes in ecosystem functions
-#usiamo copernicus: sentinel 2, createt to misure byodiversity
-#usiamo pacchetto rasterdiv, creato dal prof
+# we use copernicus: sentinel 2, createt to misure byodiversity
+# we use rasterdiv package, created by the Prof.
 
 install.packages(rasterdiv)
 install.packages(rasterVis)
@@ -12,20 +12,21 @@ library(rasterVis) # vis=visualization
 data(copNDVI)
 plot(copNDVI)
 
-#riclassifichiamo i dati rimuovendo i valori da 253 a 255, dandogli il valore NA
+# we reclassify data removing the values between 253 and 255, giveing them NA value
 copNDVI<- reclassify(copNDVI, cbind(253:255, NA))
 
 levelplot(copNDVI) 
-#con una sola funzione vediamo il cambiamento di biomassa di tutto il pianeta dal 1999 fino ad oggi, senza alcun problema!
+#WITH ONLY ONE FUNCTION WE SEE THE BIOMASS CHANGE FROM 1999 TO NOWADAYS, SO EASY, WITHOUT ANY PROBLEM!
 
-#ora aggreghiamo i valori con un fattore di 10 (prima 8km ora 80)
+#now we aggregate the values with a factor of 10 (before 8km now 80)
 copNDV10<- aggregate(copNDVI, fact=10)
 
 
 copNDV100<- aggregate(copNDV10, fact=10)
 #####################################################àà
 
-#ORA ALTRO TEMA
+#NEW THEME
+
 #Ora guardiamo uno scenario per rendere la vita sostenibile
 
 setwd("C:/lab/")
