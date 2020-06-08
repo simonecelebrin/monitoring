@@ -40,49 +40,51 @@ plotRGB(sntpca$map, 1, 2, 3, stretch="lin")
 window <- matrix(1, nrow = 5, ncol = 5) #all pixels have value 1(so they do not impact and are considered empty)
 #the function to move the window is "focal"
 #focal function means: it calculate values for the neighborhood of focal cells
-#quindi per un intorno def dalla windows lui calcola la fz che gli dici. e lo fa per tutti gli intorni possibili
-sd_str<- focal(sntpca$map$PC1, w=window, fun=sd) #sd=standard dev e w è la finestra creata prima
+#so it calculate the function you set (sd=standard deviation) for the neighborhood of the windows you define
+#and it makes for all the possible neighborhoods
+sd_str<- focal(sntpca$map$PC1, w=window, fun=sd) #sd=standard dev and w is the windows 
 cl <- colorRampPalette(c('dark blue','green','orange','red'))(100)
 plot(sd_str)
 par(mfrow=c(1,2))
 plotRGB(snt,4,3,2, stretch="lin", main="original image") 
 plot(sd_snt, col=cl, main="diversity")
-#si vede che la variabilità aumenta nelle zone di ecotono, i bordi da un ecosistema all'altro
+#veriability increases on ecotone zones, or rather the borders between ecosystems
 
 #############################################
-#stesso algoritmo applicato ad un altra immagine
+#the same algorithm applyed to a different images
 #cladonia exemple
-#dimostriamo che questo tipo di algoritmo si può applicare a qualsiasi immagine, ache prese fotografiche di un lichene
+#we want to DEMOSTRATE THAT THE ALGORITHM CAN BE APPLYED TO ANY IMAGES
+#also to a lichen photograph
 setwd("C:/lab/")
 library(raster)
 #it's an RGB immages so we need to use Brick
 clad<-brick("cladonia_stellaris_calaita.JPG")
-plotRGB(clad,1,2,3, stretch="lin") #bande sono già in ordine
+plotRGB(clad,1,2,3, stretch="lin") #bands are yet in order
 # create the window
 window <- matrix(1, nrow = 3, ncol = 3) #numeber 1 is a fixed abritaty value that do not impact on the calculation
-#la funzione che usiamo è focal
-#guardiamo la correlzione delle 3 bande
+#we use focal function
+#we see the 3 bands correlation
 pairs(clad)
-#sono molto correlate, e potremmo usarne solo una, ma creiamo comunque un PCA
+#they're very correlated, and we could use only one, but let's create the PCA
 library(RStoolbox)
 cladpca<-rasterPCA(clad)
 cladpca
-#abbiamo il call
-#il model
+#we obtain:
+#the call
+#the model
 #map
-#facciamo il summary
+#let's do the summary
 summary(cladpca$model)
-#98% 
-#plottiamo in RGB il pca
+#PC1=98% 
+#plot in RGB the pca
 plotRGB(cladpca$map, 1, 2, 3, stretch="lin")
 
-#facciamo la misura con la moving windows
-sd_clad<-focal(cladpca$map$PC1, w=window, fun=sd) #fun=sd=standard deviation
-#qualora fosse troppo pesante e ci mettesse troppo tempo
-#possiamo aggregare l'immgagine
-PC1_agg<-aggregate(cladpca$map$PC1, fact=10)
+#let's do the moving window measure
+sd_clad<-focal(cladpca$map$PC1, w=window, fun=sd) #fun=sd:standard deviation
+#if it will be to heavy and it use too much time we can aggregate the image
+PC1_agg<-aggregate(cladpca$map$PC1, fact=10) #aggregation
 sd_clad_agg<-focal(PC1_agg, w=window, fun=sd)
-#creiamo una palette di colori
+#let's create a colour palette
 cl <- colorRampPalette(c('yellow','violet','black'))(100)
 par(mfrow=c(1,3))
 cl <- colorRampPalette(c('yellow','violet','black'))(100) #
@@ -90,9 +92,9 @@ plotRGB(clad,1,2,3, stretch="lin")
 plot(sd_clad, col=cl)
 plot(sd_clad_agg, col=cl)
 
-#nel primo grafico a sinistra si vede la dev.standard normale e a destra quella aggregata
-#ci dice quanto è complesso l'individuo in ogni sua parte. 
-#ovviamente aggregandolo abbiamo un mosaico diverso dall'originale
+#the second graph shows normal stand dev and the third the aggregated once
+#it describes the individual complexity in all its parts 
+#obviusly with the aggregation we have a different image
 
 
 
