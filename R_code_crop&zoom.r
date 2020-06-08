@@ -24,3 +24,6 @@ plot(snowitaly)
 zoom(snow,ext=drawExtent())
 #and we do a rectangle with the mouse, clicking on the hight left corner and right down once
 #so easy
+#and we can do the same for the crop, using the mouse and drowing a rectangle
+crop(snow, drawExtent())
+
