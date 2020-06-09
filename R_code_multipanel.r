@@ -1,22 +1,25 @@
-Excercise: make all the possible paiwis plots po#multipanel in R: the second lecture of monitoring Ecosystems
-#usiamo un pacchetto detto "sp" e usiamo le " perchè richiamiamo il nome di un pacchetto esterno
-#ce l'ho già intallato cmq la fz sarebbe
+# Excercise: make all the possible pairwis plots in R
+#we use a packet called "sp" and we use it because we use a dataset in it
+#so we install it
 install.packages("sp")
-install.packages("GGally") #occhio che R sente i maiuscolo e minuscolo, cambia
-#poi dobiamo dirgli che lo usiamo
+install.packages("GGally") #watch out! R is capital letter sensitive!
+#after we need to say to R that we use them
 library(sp) #require(sp) will also do the job
-#dentro il pacchetto c'è un data set detto meuse. i dataset in R sono detti dataframe
+#inside ther's a dataset called meuse. The dataset in R are called dataframe
 data(meuse)
-#ora abbiamo spieegato che usiamo questo pacchetto. Ma ora vogliamo attach meuse, ovvero usarlo
+#now we had explain that we need this package but we neet to explain to R that 
+#we need to use it, so:
 attach(meuse)
-#ora guardo il nome delle variabili e plot cadmio e zinc
-#head(meuse) ci mostra le prime righe del dataset mentre scrivendo meuse vedo il dataset completo
-#per l'esercizio scivo:
+#now we see the names of variables and we plot cadmio and zinc
+head(meuse) 
+#it shows the forst lines of dataframe
+#wrighting "meuse" instead I see the complete dataframe
+#for the exercise we wright:
 plot(cadmium,zinc)
 #poi posso cambiare simboli, colori ecc
 plot(cadmium,zinc, pch=15,col="red")
 #chiamo "red" con nome perchè è un nome che richiamo da fuori
-#Excercise: make all the possible paiwis plots of the dataset (ora per fare i plot di tutte le variabili con tutte, posso:) 
+#Excercise: make all the possible pairwis plots of the dataset (ora per fare i plot di tutte le variabili con tutte, posso:) 
 #fare il plot di tutte le combinazioni, oppure:
 pairs(meuse)
 #in case you recive the error "the size is too large" reshape with the mouse the dimension of the window and relounch the comand
