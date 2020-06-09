@@ -4,16 +4,16 @@ setwd("C:/lab/")
 install.packages("vegan")
 library(vegan)
 biomes<- read.table("biomes.csv", head=T, sep=",")
-#sep è per definire la virgola come separatore
-head(biomes)
-#ora facciamo l'analisi multivariata
-#la funzione che si usa è DEtrended CORrespondence ANAlysis. ovvero trasforma tutto in una due 2 
-#20 dimensioni in 2 dimensioni! 
-#diamo un nome alla fz decorana per velocizzare
+#sep is to define the comma as separator
+head(biomes) #just to see the first lines
+#now we do the multivariate analisys
+#the function we use is DEtrended CORrespondence ANAlysis, it changes all in two dimensions 
+#20 dimensions in 2 dimensions! 
+#we give a name to the function
 multivar<- decorana(biomes)
 plot(multivar)
 
-#per vedere lo stesso grafico di analisi ma nella sua interezza
+#to see the same analysis graph but in its entirety (interezza)
 multivar
 # eigenvalues ci dice la percentuale di variabile che vediamo nei 4 assi in 2d. in particolare noi vediamo l'80% circa
 # ma cosa vediamo nel dettaglio?
