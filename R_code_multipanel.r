@@ -16,23 +16,25 @@ head(meuse)
 #wrighting "meuse" instead I see the complete dataframe
 #for the exercise we wright:
 plot(cadmium,zinc)
-#poi posso cambiare simboli, colori ecc
+#then I can change symbols, colours, etc.
 plot(cadmium,zinc, pch=15,col="red")
-#chiamo "red" con nome perchè è un nome che richiamo da fuori
-#Excercise: make all the possible pairwis plots of the dataset (ora per fare i plot di tutte le variabili con tutte, posso:) 
-#fare il plot di tutte le combinazioni, oppure:
+#I wright "red" like a name, with "" because I call it from outside R
+#Excercise: make all the possible pairwis plots of the dataset (now to do all the pairwise with all the variables, I can:) 
+#Make the plot of all the combinations, too ling!, or:
 pairs(meuse)
 #in case you recive the error "the size is too large" reshape with the mouse the dimension of the window and relounch the comand
-#risultato non molto leggibile, come faccio? I had to rettify or subset the meuse dataset to have a low number of variables
+#if the result is not so readable, I had to rettify or subset the meuse dataset to have a low number of variables
 pairs(~cadmium+copper+lead+zinc, data=meuse)
-#gruppicg caracter using a tilde 
-#altro metodo: tutte le variabili =make a subset)
+#grupping carachters using a tilde 
+#other method: all the variables=make a subset)
 pairs(meuse[,3:6])
-#la , serve per dire "parti da" mentre i : per dire "fino a " non funziona con i nomi ma con i numeri!
-#exercise: prettify this graph (cambiare colori a questa funzione) 
+#the comma , is necessaty to say: "start form". Instead the duble dots : says "untill" 
+#it works with numbers, not with the names!
+#exercise: prettify this graph (let's change the colours) 
 pairs(meuse[,3:6],pch=19,col="yellow")
 pairs(meuse[,3:6],pch=19,col="blue",cex=2)
-#per fare altri scatterplot più carini con più dati, usiamo, pacchetto GGally
+#to do others scatterplot cutest with more data we can use GGally package
 library(GGAlly)
- ggpairs(meuse[,3:6])
-#IMPORTANTE: quando intallo un pacchetto è instalato per sempre. ma se lo voglio usare in una sessione di R, devo chiamarlo all'inizio con library("...")
+ggpairs(meuse[,3:6])
+#IMPORTANT: when I install a package it is installed forever
+#but if I want to use it into an R session i have to recall at the beghinning with library("...")
