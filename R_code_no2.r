@@ -64,21 +64,22 @@ boxplot(EN, outline=F) #F=false
 boxplot(EN, outline=F, horizontal=T) #T=true
 #put the axes names
 boxplot(EN, outline=F, horizontal=T, axes=T)
-#la linea nera grossa è la mediana
-#la linea degli estremi è minimo e massimo
-#si vede che il massimo è diminuito nel tempo
+#the bolt black line is the median
+#the lines at the ends are minimum and maximus
+#over time maximus is decreased 
 
-#ora altro tipo di grafico
-#mettiamo asse x immagine 1
-#immagine 13 asse y
-#ci viene una linea a 45 gradi che descrive le corrispondenze 1 a 1 (y=x)
-#la maggior parte dei dati allora sarà sotto questa linea perchè l'immagine 1 ha i valori più elevati
-#x=y è la linea di non cambiamento. 
-#quindi per ogni pixel c'è un posto sul grafico e si mettono in relazione i valori fra due immagini. se corrispondono allora quel pixel starà sulla retta, altrimenti no.
+#now other kind of graph
+#let's put image 1 on x aix
+#image 13 aix y
+#we obtain a 45° line that describes corrispondence 1 to 1 (y=x)
+#the data majority will be under this line, because the image 1 has highter values
+#x=y is the not changeing line 
+#so, for each pixel there's a place into the graph and the values of the two images (of thesame pixels) are related
+#if values are the same, that pixel will be on the straight line, otherwise no
 
 plot(EN$EN_0001, EN$EN_0013)
 #and to put the line
-abline(0,1, col="red") #0,1 significa x=y
+abline(0,1, col="red") #0,1 it means x=y
 
 #let's play a bit
 #1:1 line with snow data
