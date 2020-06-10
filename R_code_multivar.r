@@ -13,23 +13,27 @@ head(biomes) #just to see the first lines
 multivar<- decorana(biomes)
 plot(multivar)
 
-#to see the same analysis graph but in its entirety (interezza)
+#to see the same analysis graph but on its entirety (interezza)
 multivar
-# eigenvalues ci dice la percentuale di variabile che vediamo nei 4 assi in 2d. in particolare noi vediamo l'80% circa
-# ma cosa vediamo nel dettaglio?
-# tree_ferm è legato al ragno gigante come il bufo(fungo) e la volpe e lo scoiattolo
-# ogni punto è un plot 
-#ora facciamo l'unione di vari plot di ogni bioma
-biomes_types<- read.table("biomes_types.csv", head=T, sep=",")
+# eigenvalues shows the percentage of informations we see divided into the 4 acxes in 2d. 
+#In particular we see around 80% divided between the firs 2 graphs
+# but what do we see in detail?
+# tree_ferm is linked to the gigant spider as much to the bufo(mashroom) to fox and squirtle
+# each point is a plot 
+# now we want to do the UNION of the plots to each bioma
+biomes_types<- read.table("biomes_types.csv", head=T, sep=",") #to import a csv file
 head(biomes_types)
-#ora facciamo un link (unione) di ogni plot appartenente ad uno stesso bioma
-attach(biomes_types) #perchè abbiamo bisogno di riferirci alle colonne di quel dataset
-#unirà con una linea (analisi multivar, la colonna da usare per il tipo, colori diversi per ogni bioma,
-# kind= tipo di grafico (detto ehull)
+#let's do the JOIN (unione) of each plot belonghing with the same bioma
+attach(biomes_types) #due to we need to reffer to the coloums of this dataset
+#it will circle with a line the elements belonghing to the same bioma 
 ordiellipse (multivar, type, col=1:4, kind="ehull", lwd=3)
-#verde è la foresta tropicale, rosso è in questo caso la foresta temperata, ecc...)
-#ragnatela che unisce i vari plot di un bioma
-ordispider(multivar, type, col=1:4, label=TRUE) # label= nomi biomi vogliamo vederli
-#alcune specie non sono visibili (20%) sarebbero visibili con l'aggiunta anche di altri due assi. Queste specie non rientrano nelle ellissi tracciate.  Sono specie visibili in
-# ...altre dimensioni 
-
+#the function up from here circle, as written at the 28 row
+#let's explain it (analisi multivar, type=the coloumn to use for the type of bioma, col= colours for each bioma,
+#kind= type of graph (ehull)
+#green=tropical forest, red=temperate forest, etc
+#spider web that link the plots of a bioma
+ordispider(multivar, type, col=1:4, label=TRUE) # label= bioma names
+#the 20% of the spieces are not visible
+#them would be visible if we add the other two axes
+# these species do not enter inside the eclipses
+#because they're visible in other dimensions
