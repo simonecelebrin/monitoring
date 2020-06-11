@@ -1,11 +1,12 @@
 # R code for remote sensing data analysis
-#dopo installiamo questi pacchetti
+#we have to install this packages
 #raster
 install.packages("raster")
 install.packages("RStoolbox")
 setwd("C:/lab/")
 library(raster)
-#per importare un set di bande raster 
+
+#to import a set of raster data: brick function!
 p224r63_2011<- brick("p224r63_2011_masked.grd")
 plot(p224r63_2011)
 #let's change the color ramp
@@ -21,14 +22,14 @@ plot(p224r63_2011, col=cl)
 #B7= medium IR
 
 #multiframe of different plots
-par(mfrow=c(2,2)) #par significa: fare un grafico con 2x2 plot=4. 2 rows e 2 colums. 
-#se mettiamo (2,1) allora 2 rows and 1 column
-#lo mettiamo (2,2) perchè faremo un grafico di 4 bande. e per ogni riquadro avremo un grafico
-# praticamente mi crera un area con 4 grafici che vado a plottare
+par(mfrow=c(2,2)) #par means: do a graph with 2x2 dimensions, so we can plot 4 raster: divided into 2 rows and 2 colums. 
+#if we put (2,1) then 2 rows and 1 column
+#we create once of (2,2) because we will do a graph with 4 bands. and for each box we will have a graph
+#so basically par creates an area with 4 boxes where I can plot
 
 #B1=blue
 clb<- colorRampPalette(c("dark blue", "blue", "light blue")) (100)
-plot(p224r63_2011$B1_sre, col=clb) #$ per richiamare un solo plot
+plot(p224r63_2011$B1_sre, col=clb) #$ to recall an inside information
 
 #B2=green
 clg<-colorRampPalette(c("dark green", "green", "light green")) (100)
@@ -42,40 +43,44 @@ plot(p224r63_2011$B3_sre, col=clr)
 cln<-colorRampPalette(c("red", "orange", "yellow")) (100)
 plot(p224r63_2011$B4_sre, col=cln)
 
-#cambiamo par
+#let's change par
 par(mfrow=c(4,1))
-dev.off() #per chiudere il par
+dev.off() #to close the par
 
-#ora mettiamo 2 o 3 bande una sopra l'altra per vedere il plot come lo vedremmo noi o come lo vogliamo
-#come monta i colori il pc?
-# RGB sono i 3 componenti per rendere i colori visibili.
-# dobbiamo associare la banda 3 ad esempio al rosso e così per ogni colore (RGB)
+#now we put 2 or 3 bands one over the others just to see the plot in the same way we would see in realty
+#how the PC create the colours
+# RGB are the 3 components to meke visibles the colours
+# we have to associate for exemple the 3 band at the red colour and so for each colour (RGB)
 
 #plotRGB
-plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") #stratch è lo stratching lin(=lineare) ovvero il "tiraggio" dei vari colori per vederli meglio
-plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") #evidenziamo gli oggetti con un alta banda di NIR. e diventano rossi perchè li abbiamo associati al rosso. 
-#la parte in rosa che compare è l'agricoltura
-#altro esempio NIR on top of the G component of RGB
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") #stratch is the command to do the stratching of the colours, lin(=linear)
+#stretch does the "tiraggio" of the different colours, just to see them better
+
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") #we want to underline the objects using another band: NIR. 
+#the objects becomes red due to we put NIR on red position. 
+#the pink part is the agricolture activity
+#another exemple: NIR on top of the G component of RGB
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
 
 #new lesson
-#carico dati salvataggio
+#load saved data
 setwd("C:/lab/")
 load("rs.RData")
-ls() #per avere una lista di dati caricati
-p224r63_1988<- brick("p224r63_1988_masked.grd") #così importo nuova mappa con più bade
+ls() #to see a list of loaded datas or libraries
+p224r63_1988<- brick("p224r63_1988_masked.grd") #I import a new map with lot of bands
 plot(p224r63_1988)
 
 #exercise: plot in visible RGB 321 both images
 
 par(mfrow=c(2,1)) #2 righe, 1 colonna
-p224r63_2011<- brick("p224r63_2011_masked.grd") #necessario ricaricare l'immagine se no da errore
+p224r63_2011<- brick("p224r63_2011_masked.grd") 
 plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
 plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
 
- #stretch: se abbiamo colori da 50 a 100 con lo strach li allunghiamo da 0 a 100. per vedere più valori dettagliati.
-#ora mostriamo il NIR sciftando tutto di una posizione 
+#stretch: if we have colours between 50 and 100 thanks to the strach we organize them from 0 to 100.
+#In this way we see the values detailed
+#now we show the NIR shifting all of one position 
 #plot in false colour RGB 432 both images
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
@@ -84,18 +89,20 @@ plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
 plotRGB(p224r63_1988, r=3, g=2, b=4, stretch="Lin")
 
-#analizziamo il noise (il rumore) di queste immagini
-#abbiamo 2 modi
-#1 usare un altro tipo di stretch: histogram 
-#mostra il rumore, magari dovutio all'umidità. è molto visibile nel 1988 
-#(più verde, più eapo traspirazione, più rumore da umidità, oltre che al sensore meno capace ovviamente)
+#analyse the noise (il rumore) of these images
+#we have 2 ways:
+
+#1) use a particular stretch: histogram 
+#it shows the noise, mabye due to the umidity. It's so visible into the 1988 image 
+#(1988 images has more noise because: it has more green, so more evapotraspiraton and so more humidity, 
+#and the sensor is less developed)
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="hist")
 plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="hist")
-#histogram stretch: fa l'integrale e fa uno shock dei dati, perchè classificsa i dati in piccole classi di cui fa 
-#il rettangolo e ppoi cambia classe di colore
+#histogram stretch: makes the integral and shocks the data, because it classify the datas into small classes, and for each class
+#it create a rectangle and gives a different colour
 
-#ORA COMPARIAMO L'INDICE DI VEGETAZIONE DELLE 2 FOTO
-#DVI= vegetation index= NIR-RED
+#NOW WE COMPARE THE VEGETATION INDEX OF THE TWO IMAGES
+#DVI= vegetation index= NIR - RED
 
 #bands of landsat
 # B1= blue
@@ -106,7 +113,7 @@ plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="hist")
 #B6= Termal red
 #B7= medium IR
 
-#creiamo l'indice
+#let's create the index
 dvi2011<- p224r63_2011$B4_sre -p224r63_2011$B3_sre
 cl<- colorRampPalette(c("darkorchid3", "light blue", "lightpink4")) (100)
 plot(dvi2011,col=cl)
@@ -116,15 +123,15 @@ dvi1988<- p224r63_1988$B4_sre -p224r63_1988$B3_sre
 cl<- colorRampPalette(c("darkorchid3", "light blue", "lightpink4")) (100)
 plot(dvi1988,col=cl)
 
-#ora si fa la differenza
+#now we do the difference
 dif<- dvi2011-dvi1988
 plot(dif)
 
-#ora dobbiamo considerare la scala 
-#cambiamo la dimensione dei pixel
-#grain è la risoluzione in remote sensing
-#aggrega pixel #fact= fattore= di quanto aumentiamo i pixel
-#res sta per resample. ovvero fare resampling dei pixel
+#now we have to consider the scale 
+#let's change pixels dimensions
+#grain is the resolution in remote sensing
+#it aggregate pixels with a factor #fact= factor
+#res means resample: it does the resampling of the pixels
 p224r63_2011res<- aggregate(p224r63_2011, fact=10)
 p224r63_2011res100<- aggregate(p224r63_2011, fact=100)
 
@@ -133,9 +140,10 @@ plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011res, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011res100, r=4, g=3, b=2, stretch="Lin")
 
-#se scrivo solo
+#if I wright
 p224r63_2011
-#vedo le info base di cisascun immagine
-#non servono sempre dati super dettagliati perchè a volte aumentano il volume. bisogna sempre vedere il fine
+#I see the base info of each image
+#we usually don't need super detailed datas, because they are heavy. 
+#we need the right resolution for our finallity
 
 
