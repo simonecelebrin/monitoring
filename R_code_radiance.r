@@ -1,43 +1,44 @@
-#trasformiamo un valore di radianza in bits
+#let's TRANSFORM A RADIANCE VALUE IN BITS (for pixels)
 
 library(raster)
 
-#creiamo unn nuovo raster con 2 rows and 2 colloumns
-#inventiamo i dati
+#let's create a new raster with 2 rows and 2 colloumns
+#let's invent the data
 toy<- raster(ncol=2, nrow=2, xmn=1, xmx=2, ymn=1, ymx=2)
 values(toy) <- c(1.13,1.44,1.55,3.4)
 
 plot(toy)
-text(toy, digits=2) #digit dice il numero di cifre decimali
+text(toy, digits=2)#we put over the text and "digit" describes the number of decimal places (cifre decimali)
 
-#ora trasformiamo
-#cambiamo il range di dati che abbiamo in un insieme di 4 possibili dati potenziali
+#now let's transform
+#we change the data range into a set(insieme) of 4 possible potential data
 
-#quindi 2^2=4 #4 combinazioni 00 01 10 11, con 4 possibili valori associati. 0 1 2 3
+#so 2^2=4 #4 combinations: 00 01 10 11, with 4 possible values: 0 1 2 3
 
 toy2bits <- stretch(toy,minv=0,maxv=3) 
-storage.mode(toy2bits[]) = "integer"  # significa che usiamo numeri integer = intero il numero
+storage.mode(toy2bits[]) = "integer"  # means that we use integer numbers = numeri interi
 
 plot(toy2bits)
 text(toy2bits, digits=2)
 
-#creiamo nuovo raster con 4bits
-16 combinazioni da 0 a 15
-toy4bits <- stretch(toy,minv=0,maxv=15) #quindi stretch è quello che ci streccia i dati in un nuovo intorno
+#let's create a new raster with 4bits
+# so 16 combinations, form 0 to 15
+toy4bits <- stretch(toy,minv=0,maxv=15) #so the stretch it the command that stretch the data inside a new range
 storage.mode(toy4bits[]) = "integer"
 plot(toy4bits)
 text(toy4bits, digits=2)
 
-#se aumentiamo il numero di bits aumentiamo il range e quindi la differenza fra valori per meglio descrivere i alori numerici iniziali. 
+#if we increase the number of bits we increase the range and so the difference between the values
+#to better describe the initial numerical values.
 
-# con 8 bits = 2^8= 256 valori potenziali
-#allora streccio i valori iniziali di toy in 256 valori 
+# with 8 bits = 2^8= 256 possible values
+#so we stretch the initial toy values into 256 values 
 toy8bits <- stretch(toy,minv=0,maxv=255)
 storage.mode(toy8bits[]) = "integer"
 plot(toy8bits)
 text(toy8bits, "digits=2)
-#ora le plottiamo tutte assieme con il par
 
+#now we plot all togheter with the par function
 par(mfrow=c(1,4))
 plot(toy)
 text(toy, digits=2)
@@ -48,16 +49,15 @@ text(toy4bits, digits=2)
 plot(toy8bits)
 text(toy8bits, digits=2)
 
- #più alto è il numero di bits dei pixel, più alta sarà la discriminanza tra i valori originali
-
-#c'è una fz inversa per calcolare anche la radianza da una semplificazione in bits a quella originale
+#highter is the number of bits (of pixels), highter is the  discriminance between the original values
+#there's alsto an inverse function that calculate the radiance from a pixels matrix
 dev.off()
 
 library(rasterdiv)
 plot(copNDVI)
  
- #la maggiorparte dei casi i valori di freq sono espressi in 8bits (265) 
- al massimo in 16bits
+ #like here, the the majority of cases the frequency values ​​are expressed in 8bits (265)
+ #at most in 16bits
  
  
 
