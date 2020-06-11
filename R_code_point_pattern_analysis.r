@@ -1,19 +1,19 @@
 # Point pattern analysis: Density map
 
-#installare libreria che ci permetterà di fare questa analisi
+#let' install the library for this analysis
 install.packages("spatstat")
 library(spatstat)
 attach(covid)
 head(covid)
 #convert the data to a point pattern object using the spatstat command ppp
 covids<- ppp(lon,lat, c(-180,180), c(-90,90)) #The general form is covids<- ppp(x.coordinates, y.coordinates, x.range, y.range)
-#senza fare attach la funzione diventa
+#without the attach the function will be
 #covids<- ppp(covis$lon, covid$lat, c(-180,180), c(-90,90))
-# c sta per clasterizzare i dati tutti assieme. è il range
-# ora facciamo una mappa di densità
+# c is used to claster the data into a range
+# now let's do a density map
 d<- density(covids)
 plot(d)
-#mettiamo i punti sopra 
+#let's put the point over the density map
 points(covids)
 
 setwd("C:/lab/")
@@ -23,35 +23,37 @@ ls()
 #d: was the density map
 library(spatstat)
 plot(d)
-#ora mettiamo sopra i punti
+#now we put over the points
 points(covids)
-#ora carichiamo la base dei continenti, e la carichiamo come un file linea da un database. 
-#3 tipi di vettori in R. i soliti 3: ounti, linee, poligoni
+
+#now we load the continents base map, and we load like a line database 
+#there are 3 kind of vectors in R: point, lines and polygons
 #installiamo rgdall
 install.packages("rgdal")
 library(rgdal)
-#inseriamo il vettore linee delle coste con estensione shp
+#let's insert the line vector of the coasts (it is a shp file)
 coastlines<- readOGR("ne_10m_coastline.shp")
-#per incollare linee sopra 
+#to plot over 
 plot(coastlines, add=T)
-#per cambiare i colori (dentro la C descriviamo il claster dei colori) e mettiamo (100) come scala di colori
+#to change the colours (inside the "c" we describes the colour claster and we put (100) like colour scale
 cl<- colorRampPalette(c("yellow","orange", "red")) (100)
-plot(d,col=cl) #per attuare la palette che abbiamo creato sopra, riplottiamo la funzione d con la fz colore: col=cl
-#poi rimettiamo sopra punti e linee
+plot(d,col=cl) #to see the colour palette we created over we have to plot again the function d writhing: col=cl
+#then we put againg point and lines over
 points(covids)
 plot(coastlines, add=T)
 
-#creo una nuova rampa di colori
+#let's create a new colour ramp palette
 cl2<- colorRampPalette(c("blue","green", "yellow","orange", "red")) (50)
 > plot(d,col=cl2, main= "Densities of covid-19")
 > points(covids)
 > plot(coastlines, add=T)
-#come esportare una mappa (in pdf)
-pdf("covid_density.pdf") #e poi mettere tutte le cose da stampare
+
+#HOW TO EXPORT A MAP (in pdf)
+pdf("covid_density.pdf") #and put all the things needs to be printed
 cl2<- colorRampPalette(c("blue","green", "yellow","orange", "red")) (50)
 > plot(d,col=cl2, main= "Densities of covid-19")
 > points(covids)
 plot(coastlines, add=T)
-dev.off() #per chiudere
+dev.off() #to close
 
-#e troviamo il file nella cartella
+#and we find the new pdf on the foulder we set at the beginning
