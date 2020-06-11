@@ -1,23 +1,24 @@
-#R_code_snor.r
+#R_code_snow.r
 
 setwd("C:/lab/")
 #import the file downloaded by copernicus
 #the one about snow
 #we need some libraryes
-#ncdf4 library that load CDF datas(.nc) 
-#CDF are similar to TIF datas
+#ncdf4 library that load NCDF datas(.nc) 
+#NCDF are similar to TIF datas
 install.packages("ncdf4")
 library(raster)
 library(ncdf4)
 snowmay<-raster("c_gls_SCE_202005260000_NHEMI_VIIRS_V1.0.1.nc")
-#c'è un warning message, perchè l'immagine è word wile, and we do a crop, so the warning say that the reference sistem is not define in R
-#praticamete il warning dice che non stiamo usando una parte dell'immagine che non è presente nel file scaricato ma è presente nel sr del file scaricato
+#there's a warning message, because the image immagine it's word wile, and we do a crop, so the warning says that the reference sistem is not define well
+#in practice the warning says: we are not using a part of the image, that's not present into the downloades file but there's into
+#the reference sistem of the file
 
 #plot the data
 #create a color ramp palette
 cl <- colorRampPalette(c('darkblue','blue','light blue'))(100)
 plot(snowmay, col=cl)
-#snow (per capire il numero dei pixel)
+#snow (to see pixels number)
 
 #now how to apply the function to several layers in just one command
 #the function is: lapply
@@ -49,7 +50,7 @@ plot(snow2020, col=cl)
 #we use 20 lines to do the job
 #to much
 
-########## so a fast method to import and plot 
+########## so a faster method to import and plot 
 
 #funtion called: lapply
 #apply a function over a list or vector
@@ -57,8 +58,8 @@ plot(snow2020, col=cl)
 
 #first we make the list of the files we are going to import
 #the function is list.files 
-#and it riunisce tot files that cointains a common pattern into the name
-rlist<-list.files(pattern="snow") #we can use also snow20
+#and it gathers (riunisce) tot files that cointains a common pattern into the name rlist
+rlist<-list.files(pattern="snow") #we can use also snow20 as pattern
 rlist #to see the output of the function
 #now we apply the function lapply to the list called rlist (composed by the 5 files)
 #use lapply to use raster to all the rlist
@@ -125,33 +126,33 @@ setwd("C:/lab/snow/")
 rlist<-list.files(pattern="snow20") #find the files
 import<-lapply(rlist,raster)#import them
 snow.multitemp<-stack(import) #we put togheter the files
-snow.multitemp #to see details of stack
+snow.multitemp #to see details of the stack
 cl <- colorRampPalette(c('darkblue','blue','light blue'))(100)
 plot(snow.multitemp, col=cl)
-#poi importo per salvare empo la previsione fatta dal prof
-#sarebbe uguale a :
+# we import also the prediction made by the prof
+#it will be the same use the once we created:
 plot(predicted.snow.2025.norm, col=cl)
-#invece facciamo:
+#but we use prof's once:
 prediction <- raster("predicted.2025.norm.tif")
 plot(prediction, col=cl)
 
-#è una immagine per cui per ogni pixel ha calcolato un valore in base ai valori dei precedenti 
-#quindi per ogni pixel una retta di regressione prevedendo il valore del 2025
+#the predicted image is an image where the function, for all the pixels, has calulated a value in relations to the previous values 
+#so for each pixel we have a regression line that predict the 2025 value
 
 #export the predicted output THAT CAN BE USED BY ANOTHER ONE (a raster file)
 writeRaster(prediction, "final.tif") #the given name of the file is final.tif 
 
 
 #now we do a final stack (to put all the images togheter)
-final.stack<-stack(snow.multitemp, prediction) #abbiamo unito con uno stack i 5 laayers uniti già in precedenza, cui aggiungiamo un immagine detta prediction
+final.stack<-stack(snow.multitemp, prediction) #we merge into a stack the 5 laayers yet merged previusly, and the predicted image
 #so we obtain a final stack with 6 images
 plot(final.stack, col=cl)
 
-#now we export this stack in pdf for the thesis
+#now we export this stack in pdf for the thesys
 pdf("my_final_graph.pdf")
 plot(final.stack, col=cl)
 dev.off()
-#now we export this stack in png for the thesis
+#now we export this stack in png for the thesys
 png("my_final_graph.png")
 plot(final.stack, col=cl)
 dev.off()
