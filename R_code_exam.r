@@ -1,4 +1,4 @@
-#R_code_exam.r
+#R_code_exam
 
 #1. R first code
 #2. R_code_multipanel
@@ -17,16 +17,18 @@
 #15. R_code_interpolation
 #16. R_code_sdm
 
-#1. R Code first
+#####################################################################################################################################
+#####################################################################################################################################
 
-#first R code
-#let'install a package
+#1. R Code first ####################################################################################################################
+
+#Let's install a package
 install.packages("sp")
 #we recall it 
 library(sp)
 data(meuse) #it's a dataset in meuse
 
-# let's see how the meuse dataset is structured:
+#let's see how the meuse dataset is structured:
 meuse
 #let's look at the first row of the set
 head(meuse)
@@ -42,11 +44,10 @@ plot(zinc,copper,col="green",pch=19)
 #to increase point dimension
 plot(zinc,copper,col="green",pch=19,cex=2)
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#2. R_code_multipanel
+#2. R_code_multipanel ###############################################################################################################
 
 # Excercise: make all the possible pairwis plots in R
 #we use a packet called "sp" and we use it because we use a dataset in it
@@ -89,18 +90,15 @@ ggpairs(meuse[,3:6])
 #IMPORTANT: when I install a package it is installed forever
 #but if I want to use it into an R session i have to recall at the beghinning with library("...")
 
+#####################################################################################################################################
+#####################################################################################################################################
 
-##############################################################################
-##############################################################################
-##############################################################################
+#3. R_code_spatial ##################################################################################################################
 
-#3. R_code_spatial
-
-# R code for spatial view of points
-
-# first thing: reuse the library called "sp"
+#R code for spatial view of points
+#first thing: reuse the library called "sp"
 library(sp) 
-# sp has a dataset called meuse
+#sp has a dataset called meuse
 data(meuse)
 head(meuse) #it's a spatial dataset, has some coordinates!
 #let's explain to R that we are gonna use data that has coordinates:
@@ -170,14 +168,12 @@ ggplot(mpg, aes(x=displ, y=hwy)) + geom_polygon()
 head(covid) #we use ggplot specifying that point dimension = number of cases
 ggplot(covid,aes(x=lon, y=lat, size=cases)) + geom_point()
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#4. R_code_point_pattern_analysis
+#4. R_code_point_pattern_analysis ###################################################################################################
 
 # Point pattern analysis: Density map
-
 #let' install the library for this analysis
 install.packages("spatstat")
 library(spatstat)
@@ -193,7 +189,6 @@ d<- density(covids)
 plot(d)
 #let's put the point over the density map
 points(covids)
-
 setwd("C:/lab/")
 load("point_pattern_analysis.RData")
 ls()
@@ -233,18 +228,15 @@ cl2<- colorRampPalette(c("blue","green", "yellow","orange", "red")) (50)
 > points(covids)
 plot(coastlines, add=T)
 dev.off() #to close
-
 #and we find the new pdf on the foulder we set at the beginning
 
  
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#5. R_code_multivar
+#5. R_code_multivar #################################################################################################################
 
 # R code for Multivariate Analysis
-
 setwd("C:/lab/")
 install.packages("vegan")
 biomes<- read.table("biomes.csv", head=T, sep=",")
@@ -256,7 +248,6 @@ head(biomes) #just to see the first lines
 #we give a name to the function
 multivar<- decorana(biomes)
 plot(multivar)
-
 #to see the same analysis graph but on its entirety (interezza)
 multivar
 # eigenvalues shows the percentage of informations we see divided into the 4 acxes in 2d. 
@@ -282,15 +273,12 @@ ordispider(multivar, type, col=1:4, label=TRUE) # label= bioma names
 # these species do not enter inside the eclipses
 #because they're visible in other dimensions
 
-
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
     
-#6. R_code_rs
+#6. R_code_rs #######################################################################################################################
 
 # R code for remote sensing data analysis
-
 #we have to install this packages
 #raster
 install.packages("raster")
@@ -364,7 +352,6 @@ p224r63_1988<- brick("p224r63_1988_masked.grd") #I import a new map with lot of 
 plot(p224r63_1988)
 
 #exercise: plot in visible RGB 321 both images
-
 par(mfrow=c(2,1)) #2 righe, 1 colonna
 p224r63_2011<- brick("p224r63_2011_masked.grd") 
 plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
@@ -383,7 +370,6 @@ plotRGB(p224r63_1988, r=3, g=2, b=4, stretch="Lin")
 
 #analyse the noise (il rumore) of these images
 #we have 2 ways:
-
 #1) use a particular stretch: histogram 
 #it shows the noise, mabye due to the umidity. It's so visible into the 1988 image 
 #(1988 images has more noise because: it has more green, so more evapotraspiraton and so more humidity, 
@@ -395,7 +381,6 @@ plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="hist")
 
 #NOW WE COMPARE THE VEGETATION INDEX OF THE TWO IMAGES
 #DVI= vegetation index= NIR - RED
-
 #bands of landsat
 # B1= blue
 #B2= green
@@ -426,7 +411,6 @@ plot(dif)
 #res means resample: it does the resampling of the pixels
 p224r63_2011res<- aggregate(p224r63_2011, fact=10)
 p224r63_2011res100<- aggregate(p224r63_2011, fact=100)
-
 par(mfrow=c(3,1))
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011res, r=4, g=3, b=2, stretch="Lin")
@@ -438,12 +422,10 @@ p224r63_2011
 #we usually don't need super detailed datas, because they are heavy. 
 #we need the right resolution for our finallity
 
-##############################################################################
-##############################################################################
-##############################################################################
-         
+#####################################################################################################################################
+#####################################################################################################################################
 
-#7. R_code_ecosystem_functions
+#7. R_code_ecosystem_functions ######################################################################################################
 
 #R code to view biomass over the word and calculate changes in ecosystem functions
 # we use copernicus: sentinel 2, createt to misure byodiversity
@@ -453,40 +435,30 @@ install.packages(rasterdiv)
 install.packages(rasterVis)
 library(rasterdiv)
 library(rasterVis) # vis=visualization
-
 data(copNDVI)
 plot(copNDVI)
 
 # we reclassify data removing the values between 253 and 255, giveing them NA value
 copNDVI<- reclassify(copNDVI, cbind(253:255, NA))
-
 levelplot(copNDVI) 
 #WITH ONLY ONE FUNCTION WE SEE THE BIOMASS CHANGE FROM 1999 TO NOWADAYS, SO EASY, WITHOUT ANY PROBLEM!
 
 #now we aggregate the values with a factor of 10 (before 8km now 80)
 copNDV10<- aggregate(copNDVI, fact=10)
-
-
 copNDV100<- aggregate(copNDV10, fact=10)
-#####################################################àà
 
 #NEW THEME
-
 #So now we want to study a scenario usefull to reach a sustainble life
 #we want to see the BIOMASS DIFFERENCE of amazon forest during one period.
-
 setwd("C:/lab/")
 library(raster)
 defor1<-brick("defor1_.jpg") #to import the images with all the bands
 defor2<-brick("defor2_.jpg")
-
 # band 1: NIR
 # band2: R
 # band3: G
-
 plotRGB(defor1, r=1, g=2, b=3, stretch="Lin") #just to see
 plotRGB(defor2, r=1, g=2, b=3, stretch="Lin") #just to see
-
 par(mfrow=c(1,2))
 plotRGB(defor1, r=1, g=2, b=3, stretch="Lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="Lin")
@@ -496,7 +468,6 @@ dvi1<- defor1$defor1_.1 - defor1$defor1_.2 #the dollar is used to link a band in
 dvi2<- defor2$defor2_.1 - defor2$defor2_.2
 cl<- colorRampPalette(c("darkblue","yellow","red","black"))(100)
 #so we obtain 2 NDVI in 2 different period
-
 par(mfrow=c(1,2))
 plot(dvi1, col=cl)
 plot(dvi2, col=cl)
@@ -506,32 +477,25 @@ difdiv=dvi1-dvi2 #now we do the difference between the two NDVI
 #In dvi1 - dvi2 :
 #Raster objects have different extents. Result for their intersection is returned
 #but is not a problem
-
 dev.off()
 cld<- colorRampPalette(c("blue","white","red"))(100)
 plot(difdiv, col=cld) #we plot the difference
-
 #histogram che mostra bil plot del dvi
-
 hist(difdiv)
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#8. R_code_pca_remote_sensing
+#8. R_code_pca_remote_sensing #######################################################################################################
 
 #let's see the CORRELATION OF DIFFERENT BANDS INTO A PCA GRAPH with more of 3 dimensions
 #PCA= it reduces the number of variables (that describes the data) to a lower latents variables number
 # it limits as much as possible the loss of informations
-
-
 setwd("C:/lab/")
 library(raster)
 install.packages("RStoolbox")
 library(RStoolbox)
 p224r63_2011<-brick("p224r63_2011_masked.grd")
-
 #b1 blue
 #b2 green
 #b3 red
@@ -540,7 +504,6 @@ p224r63_2011<-brick("p224r63_2011_masked.grd")
 #b6 thermal infrared
 #b7SWIR (other infrered, with a different wavelength)
 #b8 panchromatic
-
 plotRGB(p224r63_2011,r=5, g=4, b=3, stretch="Lin") 
 library(ggplot2)
 
@@ -558,17 +521,14 @@ plotRGB(p224r63_1988,r=5, g=4, b=3, stretch="Lin")
 #NOW LET'S USE THE PCA!!!
 #(to see the hidden percentage it's enought to change the aixs)
 dev.off()
-
 #we attend to see that blu and red are so related  because they're absorbed for photosintesis
 names(p224r63_2011) #to see band's names
 # "B1_sre" "B2_sre" "B3_sre" "B4_sre" "B5_sre" "B6_bt"  "B7_sre"
-
 # "$" per unire 
 plot(p224r63_2011$B1_sre, p224r63_2011$B3_sre)
 #with this function, as usual, we se the correlation between only two bands, (b1,b3) and it'hight and +
 
 #let's DO THE PCA
-
 #let's reduce images dimension to avoid that they're too heavy
 p224r63_2011_res <- aggregate(p224r63_2011, fact=10)
 
@@ -583,7 +543,6 @@ p224r63_2011_pca # just to see PCA characteristics
 #now we plot
 #it has different output: the call, the model and the map
 #so we plot the map using: $
-
 plot(p224r63_2011_pca$map)
 cl<- colorRampPalette(c("dark grey","grey","light grey"))(100)
 plot(p224r63_2011_pca$map, col=cl)
@@ -604,7 +563,6 @@ pairs(p224r63_2011)
 #this is the reason why PC1 shows 99,83%
 
 #now we create a new image with PC1, PC2, PC3
-
 plotRGB(p224r63_2011_pca$map, r=1,g=2,b=3, stretch="Lin") #before we have found the names of the differents PCA (PC1 is the first and...)
 
 #we do the same with the 1988 image
@@ -628,11 +586,10 @@ plot(difpca$PC1, cl=cldif )
 #we have summarize into a single layer the 8 bands of 1988
 #and we calculated the difference, seeing the temporal variation
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#9. R_code_faPAR
+#9. R_code_faPAR ####################################################################################################################
 
 #How to look at chemical cycling from satellite
 #we use compernicus images (aggregated by prof (pesano meno))
@@ -640,15 +597,12 @@ plot(difpca$PC1, cl=cldif )
 #the light is a proxy che we use to understand the leaves chlorophyll activity
 
 #NOTE: NDVI shows the BIOMASS, not the chlorophyll activity
-
 library(raster)
 library(rasterVis)
 library(rasterdiv)
 setwd("C:/lab/")
-
 copNDVI<-reclassify(copNDVI, cbind(253:255,NA)) #we delete the wather values
 levelplot(copNDVI)
-
 faPAR10<-raster("faPAR10.tif") #we aggregate with fact=10
 levelplot(faPAR10)
 #we see that faPAR is more restrictive than NDVI, because we are not considering biomass but the real plant power  in carbon absorption
@@ -657,47 +611,39 @@ levelplot(faPAR10)
 #at the equator instead, in tropical forest, light does not reach the grounde, due to plant density,
 #so it's fully eplotied (sfruttato)
 #now we save on pdf
-
 pdf("copNDVI.pdf")
 levelplot(copNDVI)
 dev.off()
-
 pdf("faPAR10.pdf")
 levelplot(faPAR10)
 dev.off()
 
-############# day 2
+#Day 2
 
 setwd("C:/lab/")
 load("faPAR.RData")
 #original faPAR is 2gb
 #let's see how much space is needed for an 8 bits set
-
 library(rasterdiv)
 library(raster)
 #to wright a raster file of a library into the PC
 writeRaster(copNDVI, "copNDVI.tif")
 #then we see the dimension on pc folder
 #only 5.4MB
-
 library(rasterVis)
 #faPAR levelplot this set
 levelplot(faPAR10)
 
 
-################
 #LINEAR REGRESSION MODEL between faPAR and NDVI
-
 #erosion exemple
 erosion <- c(12, 14, 16, 24, 26, 40, 55, 67) #we create a erosion variable
 hm <- c(30, 100, 150, 200, 260, 340, 460, 600) #heavy metals part per millions
-
 plot(erosion, hm, col="red", pch=19, xlab="erosion", ylab="heavy metals") #EASY WITH PLOT FUNCTION
 #pch=point character
 
 #we create a math model between these two variables, or rather (ovvero) we need the straight line equation
 # of the linear regression
-
 model1<-lm (hm ~ erosion) #or rather (ovvero) y=x 
 #in general lm is used to fit linear models. It can be used to carry out regression
 #y is hm and x is the erosion
@@ -713,7 +659,6 @@ abline(model1)
 #in practice: we create the regression model between erosion and hm with the plot,
 #but we obtain only the graph, so we create the math model with lm function: lm (hm ~ erosion)
 #then we plot the straight line thanks to: abline(model1)
-
 
 #NOW WE DO A MODEL ABOUT faPAR!!!!!!!!!
 setwd("C:/lab/")
@@ -735,7 +680,6 @@ random.points <- function(x,n) #n=number of random points
  #x=maximum number of pixel that the function can see. Because the two rasters have the same ammount of pixels
  #I can use one or the other, it doesn't matter
  #we take only 1000 points among all the pixels
- 
 {
 lin <- rasterToContour(is.na(x))
 pol <- as(st_union(st_polygonize(st_as_sf(lin))), 'Spatial') # st_union to dissolve geometries
@@ -763,31 +707,25 @@ abline(model2, col="red")
 #for exemple: ther's a lot of biomass in european forests, but it do not produce as much photosintesys as the equetors forests do
 #it's visible also doing the levelplot of copNDVI and faPAR10
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#10. R_code_radiance
+#10. R_code_radiance#################################################################################################################
+
 #let's TRANSFORM A RADIANCE VALUE IN BITS (for pixels)
-
 library(raster)
-
 #let's create a new raster with 2 rows and 2 colloumns
 #let's invent the data
 toy<- raster(ncol=2, nrow=2, xmn=1, xmx=2, ymn=1, ymx=2)
 values(toy) <- c(1.13,1.44,1.55,3.4)
-
 plot(toy)
 text(toy, digits=2)#we put over the text and "digit" describes the number of decimal places (cifre decimali)
 
 #now let's transform
 #we change the data range into a set(insieme) of 4 possible potential data
-
 #so 2^2=4 #4 combinations: 00 01 10 11, with 4 possible values: 0 1 2 3
-
 toy2bits <- stretch(toy,minv=0,maxv=3) 
 storage.mode(toy2bits[]) = "integer"  # means that we use integer numbers = numeri interi
-
 plot(toy2bits)
 text(toy2bits, digits=2)
 
@@ -797,11 +735,10 @@ toy4bits <- stretch(toy,minv=0,maxv=15) #so the stretch it the command that stre
 storage.mode(toy4bits[]) = "integer"
 plot(toy4bits)
 text(toy4bits, digits=2)
-
 #if we increase the number of bits we increase the range and so the difference between the values
 #to better describe the initial numerical values.
 
-# with 8 bits = 2^8= 256 possible values
+#with 8 bits = 2^8= 256 possible values
 #so we stretch the initial toy values into 256 values 
 toy8bits <- stretch(toy,minv=0,maxv=255)
 storage.mode(toy8bits[]) = "integer"
@@ -818,7 +755,6 @@ plot(toy4bits)
 text(toy4bits, digits=2)
 plot(toy8bits)
 text(toy8bits, digits=2)
-
 #highter is the number of bits (of pixels), highter is the  discriminance between the original values
 #there's alsto an inverse function that calculate the radiance from a pixels matrix
 dev.off()
