@@ -762,14 +762,13 @@ dev.off()
 library(rasterdiv)
 plot(copNDVI)
  
- #like here, the the majority of cases the frequency values ​​are expressed in 8bits (265)
- #at most in 16bits
+#like here, the the majority of cases the frequency values ​​are expressed in 8bits (265)
+#at most in 16bits
  
- ##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#11. R_code_EBVs.r
+#11. R_code_EBVs ####################################################################################################################
 
 #Essential Biodiversity variables
 #let's calculate some biodiversity statistics indices
@@ -807,7 +806,6 @@ plot(sntpca$map)
 plotRGB(sntpca$map, 1, 2, 3, stretch="lin")
 
 #now we calculate PC1 stand. dev PC1 with a pixel window 5x5
-
 #let's say to R  that we use a moving window (that analize 5x5 pixels) 
 #we create a matrix 5x5 (we don't care about its values)
 window <- matrix(1, nrow = 5, ncol = 5) #all pixels have value 1(so they do not impact and are considered empty)
@@ -823,8 +821,7 @@ plotRGB(snt,4,3,2, stretch="lin", main="original image")
 plot(sd_snt, col=cl, main="diversity")
 #veriability increases on ecotone zones, or rather the borders between ecosystems
 
-#############################################
-#the same algorithm applyed to a different images
+#the same algorithm applyed to a DIFFERENT IMAGE
 #cladonia exemple
 #we want to DEMOSTRATE THAT THE ALGORITHM CAN BE APPLYED TO ANY IMAGES
 #also to a lichen photograph
@@ -869,13 +866,10 @@ plot(sd_clad_agg, col=cl)
 #it describes the individual complexity in all its parts 
 #obviusly with the aggregation we have a different image
 
- ##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#12. R_code_snow.r
-
-#R_code_snow.r
+#12. R_code_snow.r ##################################################################################################################
 
 setwd("C:/lab/")
 #import the file downloaded by copernicus
@@ -927,12 +921,10 @@ plot(snow2020, col=cl)
 #we use 20 lines to do the job
 #to much
 
-########## so a faster method to import and plot 
-
+#A FASTER method to import and plot 
 #funtion called: lapply
 #apply a function over a list or vector
 #we want to apply the funtion raster to several layers at a time and we do with lapply
-
 #first we make the list of the files we are going to import
 #the function is list.files 
 #and it gathers (riunisce) tot files that cointains a common pattern into the name rlist
@@ -945,30 +937,25 @@ import<-lapply(rlist,raster) #we use the fuction raster to the list with the fun
 #now we do a STACK, so we put togheter a number of layer, like the satellite images do with lots of bands
 snow.multitemp<-stack(import) #in this way we created a single stack of different images in multitemporary dimension
 snow.multitemp #to see stack details
-
 plot(snow.multitemp, col=cl)
 
 #so we do a list, then with lapply we apply the function raster to each single layer
 #then we created a stack of different layers all togheter
 #and we plot it
-
 #in monitoring activities is important due to the importance of haveing different time images
 
 
 #now we make a prediction!
-#PREDICTION! TA TA TA TA!
+#PREDICTION!
 #how the snow will change in the future?
 #we can predict something using a regression model
 #so we can usa a function called: ordinary least square regrassion to se the values expected in a fixed future period
-
-######### lst's see the prediction function!
-
+#lst's see the prediction function!
 #we do it with a function prepared by the prof: "prediction"
 source("prediction.r") #prediction.r make a prediction
 #source is a function that take a certain file and use it like a code
 #soucre read R code from a file!
-
-#but let's see in detail prediction.r #####################
+#but let's see in detail prediction.r 
 library(raster)
 library(rgdal)
 
@@ -993,10 +980,9 @@ predicted.snow.2025.norm <- predicted.snow.2025*255/53.90828 #normalize the data
 
 #so let's do the prediction
 source("prediction.r")
-
 plot(predicted.snow.2025.norm, col=cl)
 
-############### DAY 2
+# DAY 2
 setwd("C:/lab/snow/")
 
 #Exercise: import the snow cover images all togheter
@@ -1015,10 +1001,8 @@ plot(prediction, col=cl)
 
 #the predicted image is an image where the function, for all the pixels, has calulated a value in relations to the previous values 
 #so for each pixel we have a regression line that predict the 2025 value
-
 #export the predicted output THAT CAN BE USED BY ANOTHER ONE (a raster file)
 writeRaster(prediction, "final.tif") #the given name of the file is final.tif 
-
 
 #now we do a final stack (to put all the images togheter)
 final.stack<-stack(snow.multitemp, prediction) #we merge into a stack the 5 laayers yet merged previusly, and the predicted image
@@ -1033,14 +1017,12 @@ dev.off()
 png("my_final_graph.png")
 plot(final.stack, col=cl)
 dev.off()
-
 #to increase the resolution of a png there are differents methods online
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#13. R_code_no2
+#13. R_code_no2 #####################################################################################################################
 
 setwd("C:/lab/NO2/")
 library(raster)
@@ -1083,7 +1065,7 @@ cl2 <- colorRampPalette(c('blue','white','red'))(100)
 dif<-EN$EN_0013 - EN$EN_0001,
 plot(dif, col=cl2)
 
-################let's do some statistics
+##let's do some STATISTICS
 #let's do with the ages
 mean(c(22,23,24,24,24))
 #23.4
@@ -1118,7 +1100,6 @@ boxplot(EN, outline=F, horizontal=T, axes=T)
 #x=y is the not changeing line 
 #so, for each pixel there's a place into the graph and the values of the two images (of thesame pixels) are related
 #if values are the same, that pixel will be on the straight line, otherwise no
-
 plot(EN$EN_0001, EN$EN_0013)
 #and to put the line
 abline(0,1, col="red") #0,1 it means x=y
@@ -1126,7 +1107,6 @@ abline(0,1, col="red") #0,1 it means x=y
 #let's play a bit
 #1:1 line with snow data
 #so we prepare the work area
-
 rlist 
 import<-lapply(rlist,raster) 
 snow.multitemp<-stack(import) 
@@ -1139,14 +1119,12 @@ plot(snow.multitemp$snow2000r, snow.multitemp$snow2020r)
 abline(0,1,col="red")
 #we see that hight walues of snow cover are always under the red line so it means that there's a decrease of snow
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#14. R_code_crop&zoom
+#14. R_code_crop&zoom ###############################################################################################################
 
 #How to crop and zoom
-
 setwd("C:/lab/")
 #how to crop an image
 #let's import an image
@@ -1173,29 +1151,22 @@ zoom(snow,ext=drawExtent())
 #and we can do the same for the crop, using the mouse and drowing a rectangle
 crop(snow, drawExtent())
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#15. R_code_interpolation
-
-# R_code_interpolation.r
+#15. R_code_interpolation ###########################################################################################################
 
 setwd("C:/lab/")
-
 #to import a csv file (it's a table) we use
 library(spatstat) #the same package we use to calculate point density
-
 #function to import:
 inp<-read.table("dati_plot55_LAST3.csv", sep=";", head=T) #sep=separator and head= there's a titlle for the coloums
 head(inp)
-
 #the table has the coordinatex X and Y (x=metric distance from the first meridian and Y from the equator)
 #table has also the slope
 #C.cov=canopy cover from 100 to 0 (copertura della chioma)
 
 #we are going to estimate the canopy cover where there's not the value!
-
 attach(inp)
 #plot(inp$X, inp$Y) or:
 plot(X,Y) #because we have attach the table
@@ -1222,16 +1193,13 @@ plot(canopy) #we plot the interpolated map
 points(inppp, col="green") #we put the points over the map
 #highter density on south est
 
-#########
+
 #Now we want to mark the lichens information of quantity
-  
 marks(inppp) <- cop.lich.mean #the lichens
 lichs <- Smooth(inppp)
 plot(lichs)
 points(inppp)
-
 #hight ammount of lichens on north west
-
 
 #now let's plot the images togheter
 par(mfrow=c(1,2))
@@ -1249,17 +1217,13 @@ points(inppp)
 plot(lichs)
 points(inppp)
 plot(Canopy.cov, cop.lich.mean, col="red",pch=19, cex=2)
-
 #we have not many point to calculate a linear regression between the two variables
 
-########################
 #LET'S PLAY WITH A NEW SET
 #psammophilus vegetation
-
 inp.psm<-read.table("dati_psammofile.csv", sep=";", head=T)
 attach(inp.psm)
 summary(inp.psm)
-
 plot(E,N) #x=E and y=N
 summaty(inp.psm)
 #to see coordinates maximum and minimum
@@ -1272,16 +1236,13 @@ Carbon <-Smooth(inp.psm.ppp)
 plot(Carbon)
 points(inp.psm.ppp, col="green")
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-#16. R_code_sdm
+#16. R_code_sdm #####################################################################################################################
 
-#R_code_sdm.r: Species Distribution Modelling
-
+# Species Distribution Modelling
 #We will obtain a model that shows the distribution of a certain specie thanks to different raster variables
-
 #all the data will be set on the library
 install.packages("sdm")
 library(raster) #for function usefull to predict 
@@ -1344,7 +1305,6 @@ plot(preds$vegetation, col=cl)
 points(species[species$Occurrence == 1,], pch=16)
 
 #let' CREATE THE MODEL
-
 #we need to explain to the software what kind of datas we are using
 #the function for this is : sdmData
 #there are 2 kinds of data for an sdm model:
@@ -1382,6 +1342,5 @@ points(species[species$Occurrence == 1,], pch=16)
 s1 <- stack(preds,p1)
 plot(s1, col=cl)
 
-##############################################################################
-##############################################################################
-##############################################################################
+#####################################################################################################################################
+#####################################################################################################################################
