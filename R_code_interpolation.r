@@ -29,7 +29,7 @@ inppp <- ppp(x=X, y=Y, c(716000,718000),c(4859000,4861000)) #we explain the coor
 #R don't know the value of the point it plottet
 #we are going to give this information to R
 #we marks the inpppp with the canopy cover!
-names(inppp) #just to see the name of te Canoly cover
+names(inppp) #just to see the name of te Canopy cover
 #now we use marks
 marks(inppp) <- Canopy.cov
 #so now we have the point and their canopy cover values
