@@ -1437,7 +1437,6 @@ m1 <- sdm(Occurrence ~ elevation + precipitation + temperature + vegetation, dat
 p1 <- predict(m1, newdata=preds) #new data= the predictors used to do the final prediction
 #we plot it!
 plot(p1, col=cl)
-[Ieri 17:20] Duccio Rocchini
     
 plot(p1, col=cl)
 points(species[species$Occurrence == 1,], pch=16)
@@ -1450,15 +1449,3 @@ plot(s1, col=cl)
 ##############################################################################
 ##############################################################################
 ##############################################################################
-
-
-
-
-
-
-
-
-
-
-
-
