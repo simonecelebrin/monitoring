@@ -32,6 +32,8 @@ plot(PCAS[[14]]$map$PC1)
 plot(PCAS[[15]]$map$PC1)
 plot(PCAS[[16]]$map$PC1)
 plot(PCAS[[17]]$map$PC1)
+mix<-lapply(plot,PCAS[[...]]$map$PC1)
+boh<-stack(PCAS, layers=PC1)
 
 ########################à
 
