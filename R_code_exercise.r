@@ -86,7 +86,7 @@ abline(0,1,col="red")
 
 #############
 
-NDVI
+#NDVI
 setwd("C:/lab/ese/")
 library(raster)
 library(ncdf4)
@@ -95,9 +95,11 @@ rNlist
 importN<-lapply(rNlist,raster)
 NDVI.multitemp<-stack(importN)
 NDVI.multitemp
+summary(NDVI.multitemp)
 clN <- colorRampPalette(c('light green','green','dark green'))(100)
+#togli valori non colorati di sfondo
 plot(NDVI.multitemp, col=clN)
-plot(NDVI.multitemp$
+plot(NDVI.multitemp$ndex.1KM.1, col=cl)
 
 NDVI.multitempR<- reclassify(NDVI.multitemp, cbind(253:255, NA))
 NDVI.multitempR
@@ -113,12 +115,12 @@ GRAFIC OF THE VARANCE (window)
 
 ########################################
 
-LINEAR MODEL BETWEEN TEMP and NDVI
+LINEAR MODEL BETWEEN CO2 and NDVI
 
 library(rasterVis)
 library(sf) 
 NDVI2020<-raster("c_gls_NDVI_202006010000_GLOBE_PROBAV_V2.2.1.nc")
-Temp2020<-raster("c_gls_LST10-TCI_202006010000_GLOBE_GEO_V1.2.1.nc")
+Co22020<-raster("odiac2019_1x1d_2018.nc")
 #we define the random function
 random.points <- function(x,n) #n=number of random points
  #x=maximum number of pixel that the function can see. Because the two rasters have the same ammount of pixels
@@ -136,7 +138,7 @@ pts<-random.points(NDVI2020,1000)
 #with the function EXTRACT
 pts <- random.points(NDVI2020,1000) #we use only
 NDVI2020p <- extract(NDVI2020, pts)
-Temp2020p <- extract(Temp2020,pts)
+CO22020p <- extract(CO22020,pts)
 
 
 model<-lm(NDVI2020p ~ Temp2020p)
