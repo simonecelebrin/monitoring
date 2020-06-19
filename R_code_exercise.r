@@ -104,7 +104,7 @@ plot(NDVI.multitemp$ndex.1KM.1, col=cl)
 NDVI.multitempR<- reclassify(NDVI.multitemp, cbind(253:255, NA))
 NDVI.multitempR
 
-prova=values(NDVI.multitempR$Normalized.Difference.Vegetation.Index.1KM.5)[values(NDVI.multitempR$Normalized.Difference.Vegetation.Index.1KM.5) < 0] = NA
+prova=values(NDVI.multitempR$Normalized.Difference.Vegetation.Index.1KM.1)[values(NDVI.multitempR$Normalized.Difference.Vegetation.Index.1KM.5) < 0] = NA
 #NDVI 3 periods in rgb
 plotRGB(NDVI.multitempR, r=1, g=2, b=3, stretch="Lin") #bello
 so where there are highter values the image thakes the red, green or blue color
