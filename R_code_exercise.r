@@ -1,19 +1,17 @@
-R_code_exercise.r
+# R_code_exercise.r
 
-#export the predicted output THAT CAN BE USED BY ANOTHER ONE (a raster file)
-writeRaster(prediction, "final.tif") #the given name of the file is final.tif 
-
-##########################
 setwd("C:/lab/ese/")
 library(raster)
 library(ncdf4)
 library(RStoolbox)
+
+# C02 file 
 rlist<-list.files(pattern="odiac")
 import<-lapply(rlist,brick)
 PCAS<-lapply(import,rasterPCA)
 PCAS
 summary(PCAS[[1]]$model)
-summary(PCAS[[2]]$model)
+summary(PCAS[[8]]$model)
 summary(PCAS[[17]]$model)
 
 PC1.s1<-(PCAS[[(1)]]$map$PC1)/maxValue(PCAS[[(1)]]$map$PC1)
@@ -39,45 +37,39 @@ writeRaster(listPC1s, "PC1s_all.tif")
 
 serieC02<-brick("PC1s_all.tif")
 
-
-
-########################à
-
+########################
 #PREVISIONE CO2
-setwd("C:/lab/ese/")
-library(raster)
-library(ncdf4)
-cl <- colorRampPalette(c('green','white','yellow' , 'orange' , 'red'))(100)
-plot(co2.multitemp, col=cl)
-co2.multitempR<- reclassify(co2.multitemp, cbind(254:255, NA))
-plot(co2.multitempR, col=cl)
 
-
-#oppure
-source("prediction.r")
+source("predictionCo2.r")
 plot(predicted.co2)
-#or
-source("prediction2.r")
-plot(predicted.co21) #no Riclassify
-
-png("my_final_graph_co2_prevista.png")
-plot(predicted.co2, col=cl)
+click(predicted.co2, n=Inf, id=FALSE, xy=FALSE, cell=FALSE, type="n", show=TRUE)
+x <- reclassify(predicted.co2, cbind(6.75477e-05,6.75478e-05,NA))
+cl<- colorRampPalette(c("dark green", "light gray", "dark red")) (25)
+plot(x, col=cl)
+writeRaster(x, "previsione_co2.tif")
+x100<-x*100
+plot(x100, col=cl)
+png("co2_prevista.png")
+plot(x100, col=cl)
 dev.off()
+#coste
+coastlines<- readOGR("ne_10m_coastline.shp")
 
-#manca rappresentarla a colori
-
-library(colorRamps)
-col5 <- colorRampPalette(c('dark green', 'white', 'red'))  #create color ramp starting from green to red
-color_levels=100 #the number of colors to use
-max_absolute_value=0.9 #what is the maximum absolute value of raster?
-plot(predicted.co2, col=col5(n=100), breaks=seq(-max_absolute_value,max_absolute_value,length.out=color_levels+1) , axes=FALSE)
-######################
 
 #DIFFERENZA CO2
-dif<- co2.multitempR$ffco2_emission.17 - co2.multitempR$ffco2_emission.1
+dif<- (serieC02$PC1s_all.17 - serieC02$PC1s_all.1)
 dif
-plot(dvif)
-tiff("dvi1.tiff")
+plot(dif)
+click(dif, n=Inf, id=FALSE, xy=FALSE, cell=FALSE, type="n", show=TRUE)
+d <- reclassify(dif, cbind(0.0007800222,NA))
+png("co2_dif.png")
+plot(d, col=cl)
+dev.off()
+
+#correlazione tra previsione e differenza
+plot(x,d)
+png("co2_dif.png")
+plot(x,d)
 dev.off()
 
 #TREND NE TEMPO 
@@ -89,11 +81,8 @@ dev.off()
 #so, for each pixel there's a place into the graph and the values of the two images (of thesame pixels) are related
 #if values are the same, that pixel will be on the straight line, otherwise no
 
-plot(co2.multitempR$ffco2_emission.1, co2.multitempR$ffco2_emission.17, main="CO2 variation",
-ylab="2018")
+plot(serieC02$PC1s_all.1, serieC02$PC1s_all.17, main="CO2 variation")
 abline(0,1,col="red")
-
-
 
 #############
 
@@ -108,6 +97,7 @@ NDVI.multitemp<-stack(importN)
 NDVI.multitemp
 clN <- colorRampPalette(c('light green','green','dark green'))(100)
 plot(NDVI.multitemp, col=clN)
+plot(NDVI.multitemp$
 
 NDVI.multitempR<- reclassify(NDVI.multitemp, cbind(253:255, NA))
 NDVI.multitempR
