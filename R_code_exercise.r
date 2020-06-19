@@ -3,37 +3,43 @@ R_code_exercise.r
 #export the predicted output THAT CAN BE USED BY ANOTHER ONE (a raster file)
 writeRaster(prediction, "final.tif") #the given name of the file is final.tif 
 
-###################à
-#HOW to import a single CO2 map
-co2uno<-brick("odiac2019_1x1d_2002.nc")
+##########################
+setwd("C:/lab/ese/")
+library(raster)
+library(ncdf4)
 library(RStoolbox)
-co2unopca<-rasterPCA(co2uno)
-summary(co2unopca$model) #we see into $model that PC1 explain the 70% of all data
-plot(co2unopca$map$PC1)
-
-##########################à
 rlist<-list.files(pattern="odiac")
 import<-lapply(rlist,brick)
 PCAS<-lapply(import,rasterPCA)
-plot(PCAS[[1]]$map$PC1)
-plot(PCAS[[2]]$map$PC1)
-plot(PCAS[[3]]$map$PC1)
-plot(PCAS[[4]]$map$PC1)
-plot(PCAS[[5]]$map$PC1)
-plot(PCAS[[6]]$map$PC1)
-plot(PCAS[[7]]$map$PC1)
-plot(PCAS[[8]]$map$PC1)
-plot(PCAS[[9]]$map$PC1)
-plot(PCAS[[10]]$map$PC1)
-plot(PCAS[[11]]$map$PC1)
-plot(PCAS[[12]]$map$PC1)
-plot(PCAS[[13]]$map$PC1)
-plot(PCAS[[14]]$map$PC1)
-plot(PCAS[[15]]$map$PC1)
-plot(PCAS[[16]]$map$PC1)
-plot(PCAS[[17]]$map$PC1)
-mix<-lapply(plot,PCAS[[...]]$map$PC1)
-boh<-stack(PCAS, layers=PC1)
+PCAS
+summary(PCAS[[1]]$model)
+summary(PCAS[[2]]$model)
+summary(PCAS[[17]]$model)
+
+PC1.s1<-(PCAS[[(1)]]$map$PC1)/maxValue(PCAS[[(1)]]$map$PC1)
+PC1.s2<-(PCAS[[(2)]]$map$PC1)/maxValue(PCAS[[(2)]]$map$PC1)
+PC1.s3<-(PCAS[[(3)]]$map$PC1)/maxValue(PCAS[[(3)]]$map$PC1)
+PC1.s4<-(PCAS[[(4)]]$map$PC1)/maxValue(PCAS[[(4)]]$map$PC1)
+PC1.s5<-(PCAS[[(5)]]$map$PC1)/maxValue(PCAS[[(5)]]$map$PC1)
+PC1.s6<-(PCAS[[(6)]]$map$PC1)/maxValue(PCAS[[(6)]]$map$PC1)
+PC1.s7<-(PCAS[[(7)]]$map$PC1)/maxValue(PCAS[[(7)]]$map$PC1)
+PC1.s8<-(PCAS[[(8)]]$map$PC1)/maxValue(PCAS[[(8)]]$map$PC1)
+PC1.s9<-(PCAS[[(9)]]$map$PC1)/maxValue(PCAS[[(9)]]$map$PC1)
+PC1.s10<-(PCAS[[(10)]]$map$PC1)/maxValue(PCAS[[(10)]]$map$PC1)
+PC1.s11<-(PCAS[[(11)]]$map$PC1)/maxValue(PCAS[[(11)]]$map$PC1)
+PC1.s12<-(PCAS[[(12)]]$map$PC1)/maxValue(PCAS[[(12)]]$map$PC1)
+PC1.s13<-(PCAS[[(13)]]$map$PC1)/maxValue(PCAS[[(13)]]$map$PC1)
+PC1.s14<-(PCAS[[(14)]]$map$PC1)/maxValue(PCAS[[(14)]]$map$PC1)
+PC1.s15<-(PCAS[[(15)]]$map$PC1)/maxValue(PCAS[[(15)]]$map$PC1)
+PC1.s16<-(PCAS[[(16)]]$map$PC1)/maxValue(PCAS[[(16)]]$map$PC1)
+PC1.s17<-(PCAS[[(17)]]$map$PC1)/maxValue(PCAS[[(17)]]$map$PC1)
+union<-list(PC1.s1,PC1.s2, PC1.s3, PC1.s4, PC1.s5, PC1.s6, PC1.s7, PC1.s8, PC1.s9, PC1.s10, PC1.s11, PC1.s12, PC1.s13, PC1.s14, PC1.s15, PC1.s16, PC1.s17)
+listPC1s<-stack(union)
+writeRaster(listPC1s, "PC1s_all.tif")
+
+serieC02<-brick("PC1s_all.tif")
+
+
 
 ########################à
 
@@ -41,10 +47,6 @@ boh<-stack(PCAS, layers=PC1)
 setwd("C:/lab/ese/")
 library(raster)
 library(ncdf4)
-rlist<-list.files(pattern="odiac")
-import<-lapply(rlist,raster)
-co2.multitemp<-stack(import)
-co2.multitemp
 cl <- colorRampPalette(c('green','white','yellow' , 'orange' , 'red'))(100)
 plot(co2.multitemp, col=cl)
 co2.multitempR<- reclassify(co2.multitemp, cbind(254:255, NA))
