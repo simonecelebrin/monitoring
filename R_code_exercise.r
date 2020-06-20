@@ -36,7 +36,9 @@ listPC1s<-stack(union)
 writeRaster(listPC1s, "PC1s_all.tif")
 
 serieC02<-brick("PC1s_all.tif")
-
+png("serieC02")
+plot(serieCO2, main="CO2 serie")
+dev.off()
 ########################
 #PREVISIONE CO2
 
@@ -52,6 +54,7 @@ plot(x100, col=cl)
 png("co2_prevista.png")
 plot(x100, col=cl)
 dev.off()
+
 #coste
 coastlines<- readOGR("ne_10m_coastline.shp")
 
@@ -68,7 +71,7 @@ dev.off()
 
 #correlazione tra previsione e differenza
 plot(x,d)
-png("co2_dif.png")
+png("co2_corr_prev_diff.png", main="Correlazione fra CO2 prevista e differenza annuale", ylab="previsione", xlab="differenza")
 plot(x,d)
 dev.off()
 
@@ -81,8 +84,26 @@ dev.off()
 #so, for each pixel there's a place into the graph and the values of the two images (of thesame pixels) are related
 #if values are the same, that pixel will be on the straight line, otherwise no
 
+
+png("TrendC02")
 plot(serieC02$PC1s_all.1, serieC02$PC1s_all.17, main="CO2 variation")
 abline(0,1,col="red")
+dev.off()
+
+#create a box plot
+#y aix: the different times 
+#boxplot takes in any number of numeric vectors, drawing a boxplot for each vector
+boxplot(serieC02)
+#in black the outlayers
+#to remove them:
+boxplot(serieC02, outline=F) #F=false
+#to make it orizontaly
+boxplot(serieC02, outline=F, horizontal=T) #T=true
+#put the axes names
+boxplot(serieC02, outline=F, horizontal=T, axes=T)
+#the bolt black line is the median
+#the lines at the ends are minimum and maximus
+#over time maximus is decreased 
 
 #############
 
@@ -98,21 +119,29 @@ NDVI.multitemp
 summary(NDVI.multitemp)
 clN <- colorRampPalette(c('light green','green','dark green'))(100)
 #togli valori non colorati di sfondo
-plot(NDVI.multitemp, col=clN)
-plot(NDVI.multitemp$ndex.1KM.1, col=cl)
-
-NDVI.multitempR<- reclassify(NDVI.multitemp, cbind(253:255, NA))
-NDVI.multitempR
-
-prova=values(NDVI.multitempR$Normalized.Difference.Vegetation.Index.1KM.1)[values(NDVI.multitempR$Normalized.Difference.Vegetation.Index.1KM.5) < 0] = NA
+plot(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1)
+click(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1, n=Inf, id=FALSE, xy=FALSE, cell=FALSE, type="n", show=TRUE)
+NDVI.multitempR<- calc(NDVI.multitemp, fun=function(x){ x[x > 0.936000] <- NA; return(x)} )
+writeRaster(NDVI.multitempR, "NDVI_corr.tif")
 #NDVI 3 periods in rgb
-plotRGB(NDVI.multitempR, r=1, g=2, b=3, stretch="Lin") #bello
-so where there are highter values the image thakes the red, green or blue color
+plotRGB(NDVI.multitempR, r=1, g=3, b=6, stretch="Lin") #bello
+#so where there are highter values the image thakes the red, green or blue color
 #so we understand in wich month there's been the highter values and where!!!
-#13
 
-GRAFIC OF THE VARANCE (window)
 
+################################
+window <- matrix(1, nrow = 5, ncol = 5) #all pixels have value 1(so they do not impact and are considered empty)
+#the function to move the window is "focal"
+#focal function means: it calculate values for the neighborhood of focal cells
+#so it calculate the function you set (sd=standard deviation) for the neighborhood of the windows you define
+#and it makes for all the possible neighborhoods
+sd_str<- focal(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.6, w=window, fun=sd) #sd=standard dev and w is the windows 
+cl <- colorRampPalette(c('dark blue','green','orange','red'))(100)
+plot(sd_str)
+par(mfrow=c(1,2))
+plot(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1,main="original image") 
+plot(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1, col=cl, main="diversity")
+#veriability increases on ecotone zones, or rather the borders between ecosystems
 ########################################
 
 LINEAR MODEL BETWEEN CO2 and NDVI
@@ -145,7 +174,17 @@ model<-lm(NDVI2020p ~ Temp2020p)
 summary(model)
 plot(NDVI2020p,Temp2020p,col="green")
 abline(model1, col="red")
-NON VA
-#######################à
+
+#######################
+#general model:
+NDVI2020<-raster("c_gls_NDVI_202006010000_GLOBE_PROBAV_V2.2.1.nc")
+Co22020<-raster("odiac2019_1x1d_2018.nc")
+Temper2020<-raster("c_gls_LST10-TCI_202006010000_GLOBE_GEO_V1.2.1.nc")
+
+model <- lm(sales ~ youtube + facebook + newspaper, data = marketing)
+summary(model)
+
+
+
 ALL THE INFORMATION PAIRS
 
