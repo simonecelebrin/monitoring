@@ -52,7 +52,7 @@ writeRaster(x, "previsione_co2.tif")
 x100<-x*100
 plot(x100, col=cl)
 png("co2_prevista.png")
-plot(x100, col=cl)
+plot(x100, col=cl, main= "Previsione CO2)
 dev.off()
 
 #coste
@@ -66,7 +66,7 @@ plot(dif)
 click(dif, n=Inf, id=FALSE, xy=FALSE, cell=FALSE, type="n", show=TRUE)
 d <- reclassify(dif, cbind(0.0007800222,NA))
 png("co2_dif.png")
-plot(d, col=cl)
+plot(d, col=cl, main="Differenza CO2 2018-2002")
 dev.off()
 
 #correlazione tra previsione e differenza
@@ -85,8 +85,8 @@ dev.off()
 #if values are the same, that pixel will be on the straight line, otherwise no
 
 
-png("TrendC02")
-plot(serieC02$PC1s_all.1, serieC02$PC1s_all.17, main="CO2 variation")
+png("TrendC02.png")
+plot(serieC02$PC1s_all.1, serieC02$PC1s_all.17, main="CO2 variation (2018-2002)")
 abline(0,1,col="red")
 dev.off()
 
@@ -101,6 +101,9 @@ boxplot(serieC02, outline=F) #F=false
 boxplot(serieC02, outline=F, horizontal=T) #T=true
 #put the axes names
 boxplot(serieC02, outline=F, horizontal=T, axes=T)
+png("Boxplot Co2C02.png")
+boxplot(serieC02, outline=F, horizontal=T, main="Boxplot CO2") #T=true
+dev.off()
 #the bolt black line is the median
 #the lines at the ends are minimum and maximus
 #over time maximus is decreased 
@@ -124,25 +127,47 @@ click(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1, n=Inf, id=FAL
 NDVI.multitempR<- calc(NDVI.multitemp, fun=function(x){ x[x > 0.936000] <- NA; return(x)} )
 writeRaster(NDVI.multitempR, "NDVI_corr.tif")
 #NDVI 3 periods in rgb
-plotRGB(NDVI.multitempR, r=1, g=3, b=6, stretch="Lin") #bello
+png("TrendC02.png")
+plotRGB(NDVI.multitempR, r=1, g=4, b=6, stretch="Lin", main="RGB NDVI 1998-2010-2020") #bello
+dev.off()
 #so where there are highter values the image thakes the red, green or blue color
 #so we understand in wich month there's been the highter values and where!!!
 
 
 ################################
+
 window <- matrix(1, nrow = 5, ncol = 5) #all pixels have value 1(so they do not impact and are considered empty)
 #the function to move the window is "focal"
 #focal function means: it calculate values for the neighborhood of focal cells
 #so it calculate the function you set (sd=standard deviation) for the neighborhood of the windows you define
 #and it makes for all the possible neighborhoods
-sd_str<- focal(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.6, w=window, fun=sd) #sd=standard dev and w is the windows 
+aggr_NDVI <- aggregate(NDVI.multitempR$Normalized.Difference.Vegetation.Index.1KM.6, fact=10)
+sd_str<- focal(aggr_NDVI, w=window, fun=sd)
+#sd=standard dev and w is the windows 
 cl <- colorRampPalette(c('dark blue','green','orange','red'))(100)
-plot(sd_str)
+writeRaster(sd_str, "Dev.st_NDVI.tif")
+
+png("Dev.st_NDVI.png")
 par(mfrow=c(1,2))
-plot(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1,main="original image") 
-plot(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1, col=cl, main="diversity")
+plot(sd_str, main="Dev.standard NDVI")
+plot(NDVI.multitempR$NDVI_rec.6, main="NDVI")
+dev.off()
+
+png("Dev.st_NDVI_re300.png", width = 465, height = 225, units='mm', res = 300)
+par(mfrow=c(1,2))
+plot(sd_str, main="Dev.standard NDVI",col.main="red")
+plot(NDVI.multitempR$NDVI_rec.6, main="NDVI")
+dev.off()
+
+ggsave("Dev.st_NDVI_res400.png", width = 3.25, height = 3.25, dpi = 600)
+
+plot(NDVI.multitempR$NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.6,main="original image") 
+plot(sd_str, col=cl, main="diversity")
 #veriability increases on ecotone zones, or rather the borders between ecosystems
 ########################################
+#solo per ora
+sd_str<- focal(NDVI.multitempR$NDVI_rec.6, w=window, fun=sd)
+NDVI_rec.6
 
 LINEAR MODEL BETWEEN CO2 and NDVI
 
