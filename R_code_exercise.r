@@ -1,5 +1,6 @@
 # R_code_exercise.r
 
+#directory and libraries
 setwd("C:/lab/ese/")
 library(raster)
 library(ncdf4)
@@ -44,10 +45,23 @@ png("serieC02.png",  width = 4, height = 4, units = 'in', res = 1200)
 plot(serieC02,, main="CO2 serie", col.main="red",font.main=4)
 dev.off()
 
-########################
-#PREVISIONE CO2
-#serieC02<-brick("PC1s_all.tif")
+#CO2 PREVISION
 source("predictionCo2.r")
+#################
+#predictionCo2.r code:
+## prediction
+require(raster)
+require(rgdal)
+# define the extent
+ext <- c(-180, 180, -90, 90)
+extension <- crop(serieC02, ext)
+# make a time variable (to be used in regression)
+time <- 1:nlayers(serieC02)
+# run the regression
+fun <- function(x) {if (is.na(x[1])){ NA } else {lm(x ~ time)$coefficients[2] }} 
+predicted.co2 <- calc(extension, fun) 
+#################
+
 plot(predicted.co2)
 click(predicted.co2, n=Inf, id=FALSE, xy=FALSE, cell=FALSE, type="n", show=TRUE)
 x <- reclassify(predicted.co2, cbind(6.75477e-05,6.75478e-05,NA))
@@ -66,7 +80,7 @@ coastlines<- readOGR("ne_10m_coastline.shp")
 plot(coastlines, add=T,lwd=0.1)
 dev.off()
 
-#DIFFERENZA CO2
+#CO2 DIFFERENCE
 dif<- (serieC02$PC1s_all.17 - serieC02$PC1s_all.1)
 dif
 plot(dif)
@@ -76,28 +90,24 @@ png("co2_dif.png", width = 4, height = 4, units = 'in', res = 1200)
 plot(d, col=cl, main="Differenza CO2 2018-2002")
 dev.off()
 
-#correlazione tra previsione e differenza
+#CORRELATION BETWEEN PREVISION AND DIFFERENCE 
 plot(x,d)
 png("co2_corr_prev_diff.png") 
 plot(x,d, main="Correlazione fra CO2 prevista e differenza annuale", ylab="Immagine previsione", xlab="Immagine dif")
 dev.off()
 
-#TREND NE TEMPO 
-#let's put image 1 on x aix
-#image 13 aix y
+#TIME TREND
+#let's put image 1 on x aix and image 17 on aix y
 #we obtain a 45° line that describes corrispondence 1 to 1 (y=x)
-#the data majority will be under this line, because the image 1 has highter values
+#the data will be under this line if the image 1 has highter values
 #x=y is the not changeing line 
-#so, for each pixel there's a place into the graph and the values of the two images (of thesame pixels) are related
 #if values are the same, that pixel will be on the straight line, otherwise no
 png("Trend C02.png")
 plot(serieC02$PC1s_all.1, serieC02$PC1s_all.17, main="CO2 variation (2018-2002)", ylab="CO2 2018", xlab="CO2 2002")
 abline(0,1,col="red")
 dev.off()
 
-#############
-
-#NDVI
+#NDVI EVOLUTION OVER THE TIME
 rNlist<-list.files(pattern="c_gls_NDV")
 rNlist
 importN<-lapply(rNlist,raster)
@@ -105,11 +115,11 @@ NDVI.multitemp<-stack(importN)
 NDVI.multitemp
 summary(NDVI.multitemp)
 clN <- colorRampPalette(c('light green','green','dark green'))(100)
-#togli valori non colorati di sfondo
 plot(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1)
 click(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1, n=Inf, id=FALSE, xy=FALSE, cell=FALSE, type="n", show=TRUE)
 NDVI.multitempR<- calc(NDVI.multitemp, fun=function(x){ x[x > 0.936000] <- NA; return(x)} )
 
+#############
 #or: faster for PC:
 NDVI_corr.1<- calc(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1, fun=function(x){ x[x > 0.936000] <- NA; return(x)} )
 NDVI_corr.2<- calc(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.2, fun=function(x){ x[x > 0.936000] <- NA; return(x)} )
@@ -129,11 +139,9 @@ png("NDVI_RGB_serie 1998-2020.png",width = 6, height = 4, units = 'in', res = 12
 plotRGB(NDVI.multitempR, r=1, g=4, b=6, stretch="Lin",main="RGB NDVI 1998-2010-2020") #bello
 dev.off()
 #so where there are highter values the image thakes the red, green or blue color
-#so we understand in wich month there's been the highter values and where!!!
+#so we understand in wich year there's been the highter values and where!!!
 
-
-################################
-
+#NDVI STANDARD DEVIATION
 window <- matrix(1, nrow = 5, ncol = 5) #all pixels have value 1(so they do not impact and are considered empty)
 #the function to move the window is "focal"
 #focal function means: it calculate values for the neighborhood of focal cells
@@ -151,9 +159,10 @@ plot(sd_str, main="Dev.standard NDVI")
 plot(NDVI.multitempR$NDVI_corr.6, main="NDVI")
 dev.off()
 #veriability increases on ecotone zones, or rather the borders between ecosystems
-########################################
 
-#general model:
+#GENERAL MODEL:
+#Let's create a general model that rapresent into one layer: NDVI, C02, Temperature and built ground cover
+#in this way we can express the land vulnerability to heat waves
 NDVI2020<-raster("c_gls_NDVI_202006010000_GLOBE_PROBAV_V2.2.1.nc")
 serieC02<-brick("PC1s_all.tif")
 CO2ult<-serieC02$PC1s_all.1
