@@ -1358,15 +1358,18 @@ library(rgdal)
 library(rasterVis)
 library(sf) 
 
-# C02 file 
+# C02 DATA
+#Let's import the list of files: 17 images with 12 bands
 rlist<-list.files(pattern="odiac")
 import<-lapply(rlist,brick)
+#for each brick let's do a PCA 
 PCAS<-lapply(import,rasterPCA)
 PCAS
 summary(PCAS[[1]]$model)
 summary(PCAS[[8]]$model)
 summary(PCAS[[17]]$model)
-
+#we see that the PC1 usually rapresents over the 99% variability
+#so let's use and standardize them
 PC1.s1<-(PCAS[[(1)]]$map$PC1)/maxValue(PCAS[[(1)]]$map$PC1)
 PC1.s2<-(PCAS[[(2)]]$map$PC1)/maxValue(PCAS[[(2)]]$map$PC1)
 PC1.s3<-(PCAS[[(3)]]$map$PC1)/maxValue(PCAS[[(3)]]$map$PC1)
@@ -1384,8 +1387,12 @@ PC1.s14<-(PCAS[[(14)]]$map$PC1)/maxValue(PCAS[[(14)]]$map$PC1)
 PC1.s15<-(PCAS[[(15)]]$map$PC1)/maxValue(PCAS[[(15)]]$map$PC1)
 PC1.s16<-(PCAS[[(16)]]$map$PC1)/maxValue(PCAS[[(16)]]$map$PC1)
 PC1.s17<-(PCAS[[(17)]]$map$PC1)/maxValue(PCAS[[(17)]]$map$PC1)
+#we join them into a list
 union<-list(PC1.s1,PC1.s2, PC1.s3, PC1.s4, PC1.s5, PC1.s6, PC1.s7, PC1.s8, PC1.s9, PC1.s10, PC1.s11, PC1.s12, PC1.s13, PC1.s14, PC1.s15, PC1.s16, PC1.s17)
+#let's create a stack
 listPC1s<-stack(union)
+#now we create a tif file with 12 bands
+#each band is the standardized PC1 from a 12 band image (rapresenting CO2 quantity divided in 12 month)
 writeRaster(listPC1s, "PC1s_all.tif")
 
 serieC02<-brick("PC1s_all.tif")
@@ -1394,10 +1401,10 @@ plot(serieC02,, main="CO2 serie", col.main="red",font.main=4)
 dev.off()
 
 #CO2 PREVISION
+#let's predict future CO2 using past images
 source("predictionCo2.r")
 #################
 #predictionCo2.r code:
-## prediction
 require(raster)
 require(rgdal)
 # define the extent
@@ -1405,13 +1412,15 @@ ext <- c(-180, 180, -90, 90)
 extension <- crop(serieC02, ext)
 # make a time variable (to be used in regression)
 time <- 1:nlayers(serieC02)
-# run the regression
+#run the regression
 fun <- function(x) {if (is.na(x[1])){ NA } else {lm(x ~ time)$coefficients[2] }} 
 predicted.co2 <- calc(extension, fun) 
 #################
 
 plot(predicted.co2)
+#to understand the background values
 click(predicted.co2, n=Inf, id=FALSE, xy=FALSE, cell=FALSE, type="n", show=TRUE)
+#let's transform background values into NA values
 x <- reclassify(predicted.co2, cbind(6.75477e-05,6.75478e-05,NA))
 cl<- colorRampPalette(c("dark green", "light gray", "dark red")) (25)
 plot(x, col=cl)
@@ -1429,10 +1438,12 @@ plot(coastlines, add=T,lwd=0.1)
 dev.off()
 
 #CO2 DIFFERENCE
+#we calculate the CO2 difference between 2018 and 2002
 dif<- (serieC02$PC1s_all.17 - serieC02$PC1s_all.1)
 dif
 plot(dif)
 click(dif, n=Inf, id=FALSE, xy=FALSE, cell=FALSE, type="n", show=TRUE)
+#let's transform background values into NA values
 d <- reclassify(dif, cbind(0.0007800222,NA))
 png("co2_dif.png", width = 4, height = 4, units = 'in', res = 1200)
 plot(d, col=cl, main="Differenza CO2 2018-2002")
@@ -1454,8 +1465,10 @@ png("Trend C02.png")
 plot(serieC02$PC1s_all.1, serieC02$PC1s_all.17, main="CO2 variation (2018-2002)", ylab="CO2 2018", xlab="CO2 2002")
 abline(0,1,col="red")
 dev.off()
+#we see that there's two trends
 
 #NDVI EVOLUTION OVER THE TIME
+#let's import the data
 rNlist<-list.files(pattern="c_gls_NDV")
 rNlist
 importN<-lapply(rNlist,raster)
@@ -1464,11 +1477,13 @@ NDVI.multitemp
 summary(NDVI.multitemp)
 clN <- colorRampPalette(c('light green','green','dark green'))(100)
 plot(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1)
+#to understand the background values
 click(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1, n=Inf, id=FALSE, xy=FALSE, cell=FALSE, type="n", show=TRUE)
+#let's transform background values into NA values
 NDVI.multitempR<- calc(NDVI.multitemp, fun=function(x){ x[x > 0.936000] <- NA; return(x)} )
 
 #############
-#or: faster for PC:
+#or: faster for my PC:
 NDVI_corr.1<- calc(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.1, fun=function(x){ x[x > 0.936000] <- NA; return(x)} )
 NDVI_corr.2<- calc(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.2, fun=function(x){ x[x > 0.936000] <- NA; return(x)} )
 NDVI_corr.3<- calc(NDVI.multitemp$Normalized.Difference.Vegetation.Index.1KM.3, fun=function(x){ x[x > 0.936000] <- NA; return(x)} )
@@ -1480,67 +1495,80 @@ png("NDVI serie.png",width = 4, height = 4, units = 'in', res = 3000)
 plot(NDVI.multitempR, main="NDVI serie")
 dev.off()
 #############
-
 writeRaster(NDVI.multitempR, "NDVI_corr.tif")
+
 #NDVI 3 periods in rgb
 png("NDVI_RGB_serie 1998-2020.png",width = 6, height = 4, units = 'in', res = 1200)
 plotRGB(NDVI.multitempR, r=1, g=4, b=6, stretch="Lin",main="RGB NDVI 1998-2010-2020") #bello
 dev.off()
 #so where there are highter values the image thakes the red, green or blue color
-#so we understand in wich year there's been the highter values and where!!!
+#so we understand in wich year there's been the highter values and where
 
 #NDVI STANDARD DEVIATION
+#we want to understand the NDVI variation
+#let's create a moving window
 window <- matrix(1, nrow = 5, ncol = 5) #all pixels have value 1(so they do not impact and are considered empty)
 #the function to move the window is "focal"
 #focal function means: it calculate values for the neighborhood of focal cells
-#so it calculate the function you set (sd=standard deviation) for the neighborhood of the windows you define
+#so it calculate the function we set (sd=standard deviation) for the neighborhood of the windows you define
 #and it makes for all the possible neighborhoods
 aggr_NDVI <- aggregate(NDVI.multitempR$Normalized.Difference.Vegetation.Index.1KM.6, fact=10)
 sd_str<- focal(aggr_NDVI, w=window, fun=sd)
-#sd=standard dev and w is the windows 
 cl <- colorRampPalette(c('dark blue','green','orange','red'))(100)
 writeRaster(sd_str, "Dev.st_NDVI.tif")
+#veriability increases on ecotone zones, or rather the borders between ecosystems
 
 png("Dev.st_NDVI.png", width = 6, height = 8, units = 'in', res = 3000)
 par(mfrow=c(2,1))
 plot(sd_str, main="Dev.standard NDVI")
 plot(NDVI.multitempR$NDVI_corr.6, main="NDVI")
 dev.off()
-#veriability increases on ecotone zones, or rather the borders between ecosystems
 
 #GENERAL MODEL:
 #Let's create a general model that rapresent into one layer: NDVI, C02, Temperature and built ground cover
-#in this way we can express the land vulnerability to heat waves
+#in this way with a PCA we can summarize into one layer these variables
+#we obtain 4 dimensions PCA: PC1, PC2, PC3, PC4
+#that can be use like a proxy of land vulnerability to heat
+
+#let's import the variables
 NDVI2020<-raster("c_gls_NDVI_202006010000_GLOBE_PROBAV_V2.2.1.nc")
 serieC02<-brick("PC1s_all.tif")
 CO2ult<-serieC02$PC1s_all.1
 Temper2020<-raster("c_gls_LST10-DC_202006110000_GLOBE_GEO_V1.2.1.nc")
 Costru2020<- raster("lulc-human-modification-terrestrial-systems_geographic.tif")
 
+#let's give to images the same size and resolution
 NDVI2020r <- resample(NDVI2020, CO2ult, resample='bilinear') 
 Temper2020r<-resample(Temper2020, CO2ult, resample='bilinear') 
 Costru2020r<-resample(Costru2020, CO2ult, resample='bilinear')
 modelvariables<-stack(NDVI2020r,Temper2020r,CO2ult,Costru2020r)
 writeRaster(modelvariables, "stack_variables.tif")
 
-
+#let's do the PCA
 vuln<-rasterPCA(modelvariables)
+#let's use PC1 and PC2 
+#we standardize them
 vulnPC1_stand<-(vuln$map$PC1)/maxValue(vuln$map$PC1)
 vulnPC2_stand<-(vuln$map$PC2)/maxValue(vuln$map$PC2)
 vulntot<-(vulnPC1_stand+vulnPC2_stand)
 vulntot_stand<-vulntot/maxValue(vulntot)
+#let's see only americas
+#we crop 
 ext <- c(-130, -20, -80, 80)
 extension <- crop(vulntot_stand, ext)
 writeRaster(extension, "vulnerability.tif")
 
+#let's put also the m
 png("vulnerability.png", width = 6, height = 8, units = 'in', res = 3000)
 plot(extension, main="vulnerability")
+#we also put the main cities on the map and the borders of the states
 cities<- readOGR("Americas_Cities.shp")
 plot(cities, pch = 16,cex = 0.3,add=T)
 text(cities, labels=cities$NAME, cex= 0.2)
 states<- readOGR("Americas.shp")
 plot(states, lwd = 0.4, add=T)
 dev.off()
+#in this way we understand which are the states or cities with a higher vulnerability
 
 #####################################################################################################################################
 #####################################################################################################################################
