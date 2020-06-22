@@ -1568,7 +1568,7 @@ text(cities, labels=cities$NAME, cex= 0.2)
 states<- readOGR("Americas.shp")
 plot(states, lwd = 0.4, add=T)
 dev.off()
-#in this way we understand which are the states or cities with a higher vulnerability
+#in this way we understand which are the states or cities with a higher vulnerability 
 
 #####################################################################################################################################
 #####################################################################################################################################
